@@ -4,6 +4,7 @@ import 'package:english_words/english_words.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mighty_link_app/big_card.dart';
+import 'package:mighty_link_app/booking.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -134,6 +135,8 @@ class _MyHomePageState extends State<MyHomePage> {
               )),
           WeeklyForecastList(),
         ]);
+      case 3:
+        page = Booking();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -177,6 +180,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         icon: Icon(Icons.calendar_today),
                         label: 'Calendar',
                       ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.event),
+                        label: '予約',
+                      ),
                     ],
                     currentIndex: selectedIndex,
                     onTap: (value) {
@@ -206,6 +213,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       NavigationRailDestination(
                         icon: Icon(Icons.calendar_today),
                         label: Text('Calendar'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.event),
+                        label: Text('予約'),
                       ),
                     ],
                     selectedIndex: selectedIndex,
