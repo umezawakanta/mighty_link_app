@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class BookingCalender extends StatefulWidget {
   @override
@@ -98,9 +99,17 @@ class TableBasicsExample extends StatefulWidget {
 }
 
 class _TableBasicsExampleState extends State<TableBasicsExample> {
-  get kFirstDay => null;
-  
-  get kLastDay => null;
+  late DateTime _focusedDay;
+  late DateTime _firstDay;
+  late DateTime _lastDay;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusedDay = DateTime.now();
+    _firstDay = DateTime(_focusedDay.year - 2, _focusedDay.month, _focusedDay.day);
+    _lastDay = DateTime(_focusedDay.year + 2, _focusedDay.month, _focusedDay.day);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,28 +118,11 @@ class _TableBasicsExampleState extends State<TableBasicsExample> {
         title: Text('TableCalendar - Basics'),
       ),
       body: TableCalendar(
-        firstDay: kFirstDay,
-        lastDay: kLastDay,
-        focusedDay: DateTime.now(),
+        firstDay: _firstDay,
+        lastDay: _lastDay,
+        focusedDay: _focusedDay,
+        calendarFormat: CalendarFormat.month,
       ),
     );
-  }
-}
-
-class TableCalendar extends StatelessWidget {
-  final DateTime firstDay;
-  final DateTime lastDay;
-  final DateTime focusedDay;
-
-  const TableCalendar({
-    Key? key,
-    required this.firstDay,
-    required this.lastDay,
-    required this.focusedDay,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
