@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mighty_link_app/big_card.dart';
 import 'package:mighty_link_app/booking.dart';
+import 'package:mighty_link_app/booking_calender.dart';
 import 'package:mighty_link_app/favorites_page.dart';
 import 'package:provider/provider.dart';
 
@@ -25,9 +26,9 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
           primarySwatch: Colors.purple,
-          buttonTheme: const ButtonThemeData (
+          buttonTheme: const ButtonThemeData(
             textTheme: ButtonTextTheme.primary,
-          ),  
+          ),
         ),
         home: MyHomePage(),
       ),
@@ -138,6 +139,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ]);
       case 3:
         page = Booking();
+      case 4:
+        page = BookingCalender();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -185,6 +188,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         icon: Icon(Icons.event),
                         label: '予約',
                       ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.calendar_today),
+                        label: '予約カレンダー',
+                      ),
                     ],
                     currentIndex: selectedIndex,
                     onTap: (value) {
@@ -219,6 +226,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         icon: Icon(Icons.event),
                         label: Text('予約'),
                       ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.calendar_today),
+                        label: Text('予約カレンダー'),
+                      ),
                     ],
                     selectedIndex: selectedIndex,
                     onDestinationSelected: (value) {
@@ -251,60 +262,54 @@ class GeneratorPage extends StatelessWidget {
       icon = Icons.favorite_border;
     }
 
-  Widget _dialogBuilder(BuildContext context) {
-    ThemeData localTheme = Theme.of(context);
+    Widget _dialogBuilder(BuildContext context) {
+      ThemeData localTheme = Theme.of(context);
 
-    return SimpleDialog(
-      contentPadding: EdgeInsets.zero,
-      children: [
-        Image.network(
-          'https://picsum.photos/200/200?random=1',
-          fit: BoxFit.cover
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'This is a dialog. Put your stuff here.',
-                style: localTheme.textTheme.displayLarge,
-              ),
-              Text(
-                'testing 1234',
-                style: localTheme.textTheme.subtitle1?.copyWith(
-                  fontStyle: FontStyle.italic,
-                )
-              ),
-              SizedBox(height: 16),
-              Text(
-                'description goes here.',
-                style: localTheme.textTheme.bodyText2,
-              ),
-              SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Wrap(
-                  children: [
-                      TextButton (
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('I\'M ALLERGIC'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text('SEND HELP'),
-                      ),
-                  ]
+      return SimpleDialog(
+        contentPadding: EdgeInsets.zero,
+        children: [
+          Image.network('https://picsum.photos/200/200?random=1',
+              fit: BoxFit.cover),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  'This is a dialog. Put your stuff here.',
+                  style: localTheme.textTheme.displayLarge,
                 ),
-              )
-            ],
+                Text('testing 1234',
+                    style: localTheme.textTheme.subtitle1?.copyWith(
+                      fontStyle: FontStyle.italic,
+                    )),
+                SizedBox(height: 16),
+                Text(
+                  'description goes here.',
+                  style: localTheme.textTheme.bodyText2,
+                ),
+                SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Wrap(children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('I\'M ALLERGIC'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('SEND HELP'),
+                    ),
+                  ]),
+                )
+              ],
+            ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
+    }
 
     return Center(
       child: Column(
