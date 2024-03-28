@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mighty_link_app/pages/range_example.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class BookingCalender extends StatefulWidget {
@@ -84,13 +85,6 @@ class TableEventsExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container();
   }
-}
-
-class TableRangeExample extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  } 
 }
 
 class TableBasicsExample extends StatefulWidget {
