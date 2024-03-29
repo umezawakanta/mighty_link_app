@@ -3,11 +3,14 @@
 import 'package:english_words/english_words.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mighty_link_app/my_home_page.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:mighty_link_app/pages/my_home_page.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  initializeDateFormatting().then((_) {
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {

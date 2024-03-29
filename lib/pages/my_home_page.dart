@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mighty_link_app/booking.dart';
-import 'package:mighty_link_app/booking_calender.dart';
+import 'package:mighty_link_app/pages/booking_calender.dart';
 import 'package:mighty_link_app/pages/favorites_page.dart';
-import 'package:mighty_link_app/generator_page.dart';
+import 'package:mighty_link_app/pages/flutter_calendar_carousel.dart';
+import 'package:mighty_link_app/pages/generator_page.dart';
 import 'package:mighty_link_app/pages/weekly_forecast_list.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -66,6 +67,8 @@ class _MyHomePageState extends State<MyHomePage> {
         page = Booking();
       case 4:
         page = BookingCalender();
+      case 5:
+        page = FlutterCalendarCarousel(title: 'Flutter Calendar Carousel Example');
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -115,7 +118,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       BottomNavigationBarItem(
                         icon: Icon(Icons.calendar_today, color: Colors.black),
-                        label: '予約カレンダー',
+                        label: 'TableCalender Example',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.calendar_today, color: Colors.black),
+                        label: 'Flutter Calendar Carousel Example',
                       ),
                     ],
                     currentIndex: selectedIndex,
@@ -161,7 +168,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       NavigationRailDestination(
                         icon: Icon(Icons.calendar_today),
-                        label: Text('予約カレンダー'),
+                        label: Text('TableCalender Example'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.calendar_today),
+                        label: Text('Flutter Calendar Carousel Example'),
                       ),
                     ],
                     selectedIconTheme: IconThemeData(color: Colors.black),
