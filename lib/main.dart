@@ -173,23 +173,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: BottomNavigationBar(
                     items: [
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
+                        icon: Icon(Icons.home, color: Colors.black),
                         label: 'Home',
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.favorite),
+                        icon: Icon(Icons.favorite, color: Colors.black),
                         label: 'Favorites',
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.filter_drama),
+                        icon: Icon(Icons.filter_drama, color: Colors.black),
                         label: '天気予報',
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.event),
+                        icon: Icon(Icons.event, color: Colors.black),
                         label: '予約',
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.calendar_today),
+                        icon: Icon(Icons.calendar_today, color: Colors.black),
                         label: '予約カレンダー',
                       ),
                     ],
