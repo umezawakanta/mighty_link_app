@@ -4,7 +4,6 @@ import 'package:mighty_link_app/pages/complex_example.dart';
 import 'package:mighty_link_app/pages/events_example.dart';
 import 'package:mighty_link_app/pages/multi_example.dart';
 import 'package:mighty_link_app/pages/range_example.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class BookingCalender extends StatefulWidget {
   @override

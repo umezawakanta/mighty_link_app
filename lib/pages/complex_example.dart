@@ -1,6 +1,3 @@
-// Copyright 2019 Aleksander Woźniak
-// SPDX-License-Identifier: Apache-2.0
-
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
@@ -203,14 +200,14 @@ class _CalendarHeader extends StatelessWidget {
   final bool clearButtonVisible;
 
   const _CalendarHeader({
-    Key? key,
+    super.key,
     required this.focusedDay,
     required this.onLeftArrowTap,
     required this.onRightArrowTap,
     required this.onTodayButtonTap,
     required this.onClearButtonTap,
     required this.clearButtonVisible,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
