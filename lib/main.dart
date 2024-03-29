@@ -181,8 +181,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         label: 'Favorites',
                       ),
                       BottomNavigationBarItem(
-                        icon: Icon(Icons.calendar_today),
-                        label: 'Calendar',
+                        icon: Icon(Icons.filter_drama),
+                        label: '天気予報',
                       ),
                       BottomNavigationBarItem(
                         icon: Icon(Icons.event),
@@ -219,8 +219,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         label: Text('Favorites'),
                       ),
                       NavigationRailDestination(
-                        icon: Icon(Icons.calendar_today),
-                        label: Text('Calendar'),
+                        icon: Icon(Icons.filter_drama),
+                        label: Text('天気予報'),
                       ),
                       NavigationRailDestination(
                         icon: Icon(Icons.event),
