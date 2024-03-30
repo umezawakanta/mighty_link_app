@@ -4,6 +4,7 @@ import 'package:mighty_link_app/pages/booking_calender.dart';
 import 'package:mighty_link_app/pages/favorites_page.dart';
 import 'package:mighty_link_app/pages/flutter_calendar_carousel.dart';
 import 'package:mighty_link_app/pages/generator_page.dart';
+import 'package:mighty_link_app/pages/site_map.dart';
 import 'package:mighty_link_app/pages/weekly_forecast_list.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -21,10 +22,12 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (selectedIndex) {
       case 0:
-        page = GeneratorPage();
+        page = SiteMap();
       case 1:
-        page = FavoritesPage();
+        page = GeneratorPage();
       case 2:
+        page = FavoritesPage();
+      case 3:
         page = CustomScrollView(slivers: <Widget>[
           SliverAppBar(
               pinned: true,
@@ -63,11 +66,11 @@ class _MyHomePageState extends State<MyHomePage> {
               )),
           WeeklyForecastList(),
         ]);
-      case 3:
-        page = Booking();
       case 4:
-        page = BookingCalender();
+        page = Booking();
       case 5:
+        page = BookingCalender();
+      case 6:
         page = FlutterCalendarCarousel(title: 'Flutter Calendar Carousel Example');
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -103,6 +106,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       BottomNavigationBarItem(
                         icon: Icon(Icons.home, color: Colors.black),
                         label: 'Home',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.abc, color: Colors.black),
+                        label: 'Generator',
                       ),
                       BottomNavigationBarItem(
                         icon: Icon(Icons.favorite, color: Colors.black),
@@ -153,6 +160,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       NavigationRailDestination(
                         icon: Icon(Icons.home),
                         label: Text('Home'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.abc),
+                        label: Text('Generator'),
                       ),
                       NavigationRailDestination(
                         icon: Icon(Icons.favorite),
