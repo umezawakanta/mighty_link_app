@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart'; // table_calendarパッケージをインポート
 
 class BookingForm extends StatefulWidget {
   @override
@@ -11,6 +12,7 @@ class _BookingFormState extends State<BookingForm> {
   String _name = '';
   String _email = '';
   DateTime _selectedDate = DateTime.now(); // 日付選択のための状態変数
+  CalendarFormat _calendarFormat = CalendarFormat.month; // カレンダーの形式
 
   void _submitForm() {
     final form = _formKey.currentState;
@@ -46,47 +48,73 @@ class _BookingFormState extends State<BookingForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          TextFormField(
-            decoration: InputDecoration(labelText: '名前'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return '名前を入力してください';
-              }
-              return null;
-            },
-            onSaved: (value) => _name = value!,
-          ),
-          TextFormField(
-            decoration: InputDecoration(labelText: 'メールアドレス'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'メールアドレスを入力してください';
-              }
-              return null;
-            },
-            onSaved: (value) => _email = value!,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
-              onPressed: () => _selectDate(context),
-              child: Text(
-                  '日付を選択: ${DateFormat('yyyy年MM月dd日').format(_selectedDate)}'),
+    return SingleChildScrollView(
+      // スクロール可能にするためにSingleChildScrollViewを追加
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextFormField(
+              decoration: InputDecoration(labelText: '名前'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '名前を入力してください';
+                }
+                return null;
+              },
+              onSaved: (value) => _name = value!,
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: ElevatedButton(
-              onPressed: _submitForm,
-              child: Text('予約する'),
+            TextFormField(
+              decoration: InputDecoration(labelText: 'メールアドレス'),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'メールアドレスを入力してください';
+                }
+                return null;
+              },
+              onSaved: (value) => _email = value!,
             ),
-          ),
-        ],
+            TableCalendar(
+              firstDay: DateTime.utc(2010, 10, 16),
+              lastDay: DateTime.utc(2030, 3, 14),
+              focusedDay: _selectedDate,
+              calendarFormat: _calendarFormat,
+              selectedDayPredicate: (day) {
+                // 同じ日付が選択されたかどうかを判断
+                return isSameDay(_selectedDate, day);
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDate = selectedDay; // 選択した日付を更新
+                  // focusedDayを更新して、選択した日付が常に中心に表示されるようにする
+                });
+              },
+              onFormatChanged: (format) {
+                if (_calendarFormat != format) {
+                  setState(() {
+                    _calendarFormat = format; // カレンダーの形式を更新
+                  });
+                }
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: ElevatedButton(
+                onPressed: () => _selectDate(context),
+                child: Text(
+                    '日付を選択: ${DateFormat('yyyy年MM月dd日').format(_selectedDate)}'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: ElevatedButton(
+                onPressed: _submitForm,
+                child: Text('予約する'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
