@@ -107,7 +107,7 @@ class FlutterCalendarCarouselState extends State<FlutterCalendarCarousel> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double calendarHeight = screenHeight * 0.25; // 画面の高さの25%をカレンダーの高さに設定
+    double calendarHeight = screenHeight * 0.5; // 画面の高さの25%をカレンダーの高さに設定
     /// Example with custom icon
     final calendarCarousel = CalendarCarousel<Event>(
       onDayPressed: (date, events) {
@@ -174,7 +174,7 @@ class FlutterCalendarCarouselState extends State<FlutterCalendarCarousel> {
       weekFormat: false,
 //      firstDayOfWeek: 4,
       markedDatesMap: _markedDateMap,
-      height: screenHeight,
+      height: screenHeight * 1.5,
       selectedDateTime: _currentDate2,
       targetDateTime: _targetDateTime,
       customGridViewPhysics: NeverScrollableScrollPhysics(),

@@ -4,6 +4,7 @@ import 'package:mighty_link_app/pages/booking_calendar.dart';
 import 'package:mighty_link_app/pages/favorites_page.dart';
 import 'package:mighty_link_app/pages/flutter_calendar_carousel.dart';
 import 'package:mighty_link_app/pages/generator_page.dart';
+import 'package:mighty_link_app/pages/greeting_page.dart';
 import 'package:mighty_link_app/pages/site_map.dart';
 import 'package:mighty_link_app/pages/weekly_forecast_list.dart';
 
@@ -22,12 +23,14 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (selectedIndex) {
       case 0:
-        page = SiteMap();
+        page = GreetingPage();
       case 1:
-        page = GeneratorPage();
+        page = SiteMap();
       case 2:
-        page = FavoritesPage();
+        page = GeneratorPage();
       case 3:
+        page = FavoritesPage();
+      case 4:
         page = CustomScrollView(slivers: <Widget>[
           SliverAppBar(
               pinned: true,
@@ -66,11 +69,11 @@ class _MyHomePageState extends State<MyHomePage> {
               )),
           WeeklyForecastList(),
         ]);
-      case 4:
-        page = Booking();
       case 5:
-        page = BookingCalendar();
+        page = Booking();
       case 6:
+        page = BookingCalendar();
+      case 7:
         page = FlutterCalendarCarousel();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -103,6 +106,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 SafeArea(
                   child: BottomNavigationBar(
                     items: [
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.menu,
+                            color: Colors.black), // アイコンを選択してください
+                        label: 'Greeting',
+                      ),
                       BottomNavigationBarItem(
                         icon: Icon(Icons.home, color: Colors.black),
                         label: 'Home',
@@ -157,6 +165,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     },
                     destinations: [
+                      NavigationRailDestination(
+                        icon: Icon(Icons.menu),
+                        label: Text('Greeting'),
+                      ),
                       NavigationRailDestination(
                         icon: Icon(Icons.home),
                         label: Text('Home'),
