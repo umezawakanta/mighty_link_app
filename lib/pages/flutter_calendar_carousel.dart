@@ -7,9 +7,7 @@ import 'package:flutter_calendar_carousel/classes/event_list.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
 class FlutterCalendarCarousel extends StatefulWidget {
-  FlutterCalendarCarousel({super.key, required this.title});
-
-  final String title;
+  FlutterCalendarCarousel({super.key});
 
   @override
   FlutterCalendarCarouselState createState() => FlutterCalendarCarouselState();
@@ -224,7 +222,7 @@ class FlutterCalendarCarouselState extends State<FlutterCalendarCarousel> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text('Flutter Calendar Carousel Example'),
         ),
         body: SingleChildScrollView(
           child: Column(

@@ -5,12 +5,12 @@ import 'package:mighty_link_app/pages/events_example.dart';
 import 'package:mighty_link_app/pages/multi_example.dart';
 import 'package:mighty_link_app/pages/range_example.dart';
 
-class BookingCalender extends StatefulWidget {
+class BookingCalendar extends StatefulWidget {
   @override
   _BookingCalenderState createState() => _BookingCalenderState();
 }
 
-class _BookingCalenderState extends State<BookingCalender> {
+class _BookingCalenderState extends State<BookingCalendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
