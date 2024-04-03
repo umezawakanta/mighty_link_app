@@ -8,7 +8,16 @@ class GreetingPage extends StatelessWidget {
         title: Text('Greeting Page'),
       ),
       body: Center(
-        child: Text('Welcome to the Greeting Page!', style: TextStyle(fontSize: 24)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Welcome to the Greeting Page!', style: TextStyle(fontSize: 24)),
+            SizedBox(height: 20), // 余白を追加
+            Expanded(child: Image.asset('cafe01.webp')),
+            SizedBox(height: 20), // 余白を追加
+            Expanded(child: Image.asset('cafe02.webp')),
+          ],
+        ),
       ),
     );
   }

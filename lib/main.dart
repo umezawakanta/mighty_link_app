@@ -6,8 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:mighty_link_app/pages/my_home_page.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Supabase.initialize(
+    url: 'https://yvkmehkjkbjvobgptsgs.supabase.co', // SupabaseプロジェクトのURL
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2a21laGtqa2Jqdm9iZ3B0c2dzIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODU1NDE1OTcsImV4cCI6MjAwMTExNzU5N30.DRL3-jgp7HX8u9zfWQhd-aqd2P9WSFVkFB5fv7TgGXs', // Supabaseプロジェクトのanon publicキー
+  );
   initializeDateFormatting().then((_) {
     runApp(MyApp());
   });

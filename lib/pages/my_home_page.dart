@@ -5,6 +5,8 @@ import 'package:mighty_link_app/pages/favorites_page.dart';
 import 'package:mighty_link_app/pages/flutter_calendar_carousel.dart';
 import 'package:mighty_link_app/pages/generator_page.dart';
 import 'package:mighty_link_app/pages/greeting_page.dart';
+import 'package:mighty_link_app/pages/search_page.dart';
+import 'package:mighty_link_app/pages/sign_up_page.dart';
 import 'package:mighty_link_app/pages/site_map.dart';
 import 'package:mighty_link_app/pages/weekly_forecast_list.dart';
 
@@ -93,6 +95,22 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('MightyLINK App'),
         backgroundColor: Colors.teal[800],
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(context: context, delegate: SearchPage()); // 検索ページを表示
+            },
+          ),
+          IconButton(
+            // 会員登録ボタンを追加
+            icon: Icon(Icons.person_add),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => SignUpPage())); // 会員登録ページに遷移
+            },
+          ),
+        ],
       ),
       // TODO: Add a CustomScrollView
       body: LayoutBuilder(
