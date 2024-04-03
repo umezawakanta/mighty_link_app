@@ -94038,7 +94038,7 @@ $1(a){return this.a.$1(a)},
 $S:7}
 A.Nm.prototype={
 E(a){var s=null
-return A.iu(A.i4(s,s,!0,s,s,1,s,s,s,!1,s,!1,s,s,s,s,!0,s,s,s,s,s,A.ax("Greeting Page",s,s,s,s,s,s),s,s,s,1,s),s,A.dd(A.cz(A.a([A.ax("Welcome to the Greeting Page!",s,s,s,A.du(s,s,s,s,s,s,s,s,s,s,s,24,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s),A.bO(s,20,s),A.dx(A.aG9("cafe01.webp"),1),A.bO(s,20,s),A.dx(A.aG9("cafe02.webp"),1)],t.p),B.G,B.d5,B.K),s,s))}}
+return A.iu(A.i4(s,s,!0,s,s,1,s,s,s,!1,s,!1,s,s,s,s,!0,s,s,s,s,s,A.ax("Greeting Page",s,s,s,s,s,s),s,s,s,1,s),s,A.dd(A.cz(A.a([A.ax("Welcome to the Greeting Page!",s,s,s,A.du(s,s,s,s,s,s,s,s,s,s,s,24,s,s,s,s,s,!0,s,s,s,s,s,s,s,s),s,s),A.bO(s,20,s),A.dx(A.aG9("assets/cafe01.webp"),1),A.bO(s,20,s),A.dx(A.aG9("assets/cafe02.webp"),1)],t.p),B.G,B.d5,B.K),s,s))}}
 A.rq.prototype={
 a4(){return new A.Im(new A.bx(A.a([],t.PA),$.an(),t.dy),A.jd(A.aDh(),A.aDg(),t.W7),B.c1,new A.M(Date.now(),!1),B.i)}}
 A.Im.prototype={

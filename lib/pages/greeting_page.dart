@@ -13,9 +13,9 @@ class GreetingPage extends StatelessWidget {
           children: <Widget>[
             Text('Welcome to the Greeting Page!', style: TextStyle(fontSize: 24)),
             SizedBox(height: 20), // 余白を追加
-            Expanded(child: Image.asset('cafe01.webp')),
+            Expanded(child: Image.asset('assets/cafe01.webp')),
             SizedBox(height: 20), // 余白を追加
-            Expanded(child: Image.asset('cafe02.webp')),
+            Expanded(child: Image.asset('assets/cafe02.webp')),
           ],
         ),
       ),
