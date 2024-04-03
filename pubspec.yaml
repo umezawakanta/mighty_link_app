@@ -28,6 +28,6 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/cafe01.webp
-    - assets/cafe02.webp
+    - web/assets/cafe01.webp
+    - web/assets/cafe02.webp
   uses-material-design: true
