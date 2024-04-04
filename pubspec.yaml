@@ -30,4 +30,7 @@ flutter:
   assets:
     - assets/cafe01.webp
     - assets/cafe02.webp
+    - assets/cafe03.webp
+    - assets/cafe04.webp
+    - assets/cafe05.webp
   uses-material-design: true
