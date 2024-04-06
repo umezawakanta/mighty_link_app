@@ -38,7 +38,7 @@ class _MyHomePageState extends State<MyHomePage> {
         print("ログインしていません");
         // ログアウトまたは未ログインの場合、デフォルトのタイトルを表示
         setState(() {
-          appBarTitle = 'MightyLINK 古民家カフェ ログインしていません';
+          appBarTitle = 'MightyLINK 古民家カフェ';
         });
       }
     });
@@ -138,14 +138,21 @@ class _MyHomePageState extends State<MyHomePage> {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => LoginPage()));
           },
-          child: Text('ログイン', style: TextStyle(color: Colors.white)),
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white, backgroundColor: Colors.teal[700], // ボタンの背景色
+          ),
+          child: Text('ログイン'),
         ),
+        SizedBox(width: 8), // ボタン間のスペース
         TextButton(
           onPressed: () {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => SignUpPage()));
           },
-          child: Text('会員登録（無料）', style: TextStyle(color: Colors.white)),
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white, backgroundColor: Colors.teal[700], // ボタンの背景色
+          ),
+          child: Text('会員登録（無料）'),
         ),
       ]);
     } else {
@@ -156,7 +163,10 @@ class _MyHomePageState extends State<MyHomePage> {
             await Supabase.instance.client.auth.signOut();
             // 任意の処理、例えばトップページに戻るなどをここに追加
           },
-          child: Text('ログアウト', style: TextStyle(color: Colors.white)),
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white, backgroundColor: Colors.teal[700], // ボタンの背景色
+          ),
+          child: Text('ログアウト'),
         ),
       );
     }
