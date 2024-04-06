@@ -53,65 +53,100 @@ class _MyHomePageState extends State<MyHomePage> {
     // Supabaseから現在の認証セッションを取得
     final session = Supabase.instance.client.auth.currentSession;
     Widget page;
-    switch (selectedIndex) {
-      case 0:
-        page = GreetingPage();
-      case 1:
-        page = SiteMap();
-      case 2:
-        page = GeneratorPage();
-      case 3:
-        page = FavoritesPage();
-      case 4:
-        page = CustomScrollView(slivers: <Widget>[
-          SliverAppBar(
-              pinned: true,
-              stretch: true,
-              onStretchTrigger: () async {
-                print('stretch');
-              },
-              backgroundColor: Colors.teal[800],
-              // floating: true,
-              // snap: true,
-              expandedHeight: 200.0,
-              flexibleSpace: FlexibleSpaceBar(
-                stretchModes: <StretchMode>[
-                  StretchMode.zoomBackground,
-                  StretchMode.blurBackground,
-                  StretchMode.fadeTitle,
-                ],
-                title: Text('Weekly Forecast'),
-                background: DecoratedBox(
-                  position: DecorationPosition.foreground,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.center,
-                      colors: <Color>[
-                        Colors.teal[800]!,
-                        Colors.transparent,
-                      ],
+    List<Map<String, dynamic>> getNavItems() {
+      List<Map<String, dynamic>> allItems = [
+        {"icon": Icons.menu, "label": "Greeting", "page": GreetingPage()},
+        {"icon": Icons.home, "label": "Home", "page": SiteMap()},
+        {
+          "icon": Icons.abc,
+          "label": "Generator",
+          "page": GeneratorPage(),
+          "requiresLogin": true
+        },
+        {
+          "icon": Icons.favorite,
+          "label": "Favorites",
+          "page": FavoritesPage(),
+          "requiresLogin": true
+        },
+        {
+          "icon": Icons.filter_drama,
+          "label": "天気予報",
+          "page": CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                  pinned: true,
+                  stretch: true,
+                  onStretchTrigger: () async {
+                    print('stretch');
+                  },
+                  backgroundColor: Colors.teal[800],
+                  // floating: true,
+                  // snap: true,
+                  expandedHeight: 200.0,
+                  flexibleSpace: FlexibleSpaceBar(
+                    stretchModes: <StretchMode>[
+                      StretchMode.zoomBackground,
+                      StretchMode.blurBackground,
+                      StretchMode.fadeTitle,
+                    ],
+                    title: Text('Weekly Forecast'),
+                    background: DecoratedBox(
+                      position: DecorationPosition.foreground,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.center,
+                          colors: <Color>[
+                            Colors.teal[800]!,
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
+                      child: Image.network(
+                        'https://picsum.photos/200/200?random=1',
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  child: Image.network(
-                    'https://picsum.photos/200/200?random=1',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              )),
-          WeeklyForecastList(),
-        ]);
-      case 5:
-        page = Booking();
-      case 6:
-        page = BookingCalendar();
-      case 7:
-        page = FlutterCalendarCarousel();
-      case 8:
-        page = UserProfilePage();
-      default:
-        throw UnimplementedError('no widget for $selectedIndex');
+                  )),
+              WeeklyForecastList(),
+            ],
+          ),
+          "requiresLogin": true
+        },
+        {
+          "icon": Icons.event,
+          "label": "予約フォーム",
+          "page": Booking(),
+        },
+        {
+          "icon": Icons.calendar_today,
+          "label": "TableCalender Example",
+          "page": BookingCalendar(),
+          "requiresLogin": true
+        },
+        {
+          "icon": Icons.calendar_today,
+          "label": "Flutter Calendar Carousel Example",
+          "page": FlutterCalendarCarousel(),
+          "requiresLogin": true
+        },
+        {
+          "icon": Icons.people,
+          "label": "ユーザー情報",
+          "page": UserProfilePage(),
+          "requiresLogin": true
+        },
+      ];
+
+      // ログインしている場合はすべての項目を、そうでない場合はrequiresLoginがfalseまたは未設定の項目のみを返す
+      return session != null
+          ? allItems
+          : allItems.where((item) => item["requiresLogin"] != true).toList();
     }
+
+    var navItems = getNavItems();
+    page = navItems[selectedIndex]["page"];
 
     // The container for the current page, with its background color
     // and subtle switching animation.
@@ -202,21 +237,24 @@ class _MyHomePageState extends State<MyHomePage> {
       List<BottomNavigationBarItem> items = [
         BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Greeting'),
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.abc), label: 'Generator'),
-        BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorites'),
-        BottomNavigationBarItem(icon: Icon(Icons.filter_drama), label: '天気予報'),
         BottomNavigationBarItem(icon: Icon(Icons.event), label: '予約フォーム'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today), label: 'TableCalender Example'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Flutter Calendar Carousel Example'),
       ];
 
       // ユーザーがログインしている場合、ユーザー情報メニューを追加
       if (Supabase.instance.client.auth.currentSession != null) {
-        items.add(
-            BottomNavigationBarItem(icon: Icon(Icons.people), label: 'ユーザー情報'));
+        items.addAll([
+          BottomNavigationBarItem(icon: Icon(Icons.abc), label: 'Generator'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.favorite), label: 'Favorites'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.filter_drama), label: '天気予報'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today), label: 'TableCalender Example'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_today),
+              label: 'Flutter Calendar Carousel Example'),
+          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'ユーザー情報')
+        ]);
       }
 
       return items;
@@ -234,37 +272,39 @@ class _MyHomePageState extends State<MyHomePage> {
           label: Text('Home'),
         ),
         NavigationRailDestination(
-          icon: Icon(Icons.abc),
-          label: Text('Generator'),
-        ),
-        NavigationRailDestination(
-          icon: Icon(Icons.favorite),
-          label: Text('Favorites'),
-        ),
-        NavigationRailDestination(
-          icon: Icon(Icons.filter_drama),
-          label: Text('天気予報'),
-        ),
-        NavigationRailDestination(
           icon: Icon(Icons.event),
           label: Text('予約フォーム'),
-        ),
-        NavigationRailDestination(
-          icon: Icon(Icons.calendar_today),
-          label: Text('TableCalender'),
-        ),
-        NavigationRailDestination(
-          icon: Icon(Icons.calendar_today),
-          label: Text('Flutter Calendar Carousel'),
         ),
       ];
 
       // ユーザーがログインしている場合、ユーザー情報メニューを追加
       if (Supabase.instance.client.auth.currentSession != null) {
-        destinations.add(NavigationRailDestination(
-          icon: Icon(Icons.people),
-          label: Text('ユーザー情報'),
-        ));
+        destinations.addAll([
+          NavigationRailDestination(
+            icon: Icon(Icons.abc),
+            label: Text('Generator'),
+          ),
+          NavigationRailDestination(
+            icon: Icon(Icons.favorite),
+            label: Text('Favorites'),
+          ),
+          NavigationRailDestination(
+            icon: Icon(Icons.filter_drama),
+            label: Text('天気予報'),
+          ),
+          NavigationRailDestination(
+            icon: Icon(Icons.calendar_today),
+            label: Text('TableCalender'),
+          ),
+          NavigationRailDestination(
+            icon: Icon(Icons.calendar_today),
+            label: Text('Flutter Calendar Carousel'),
+          ),
+          NavigationRailDestination(
+            icon: Icon(Icons.people),
+            label: Text('ユーザー情報'),
+          )
+        ]);
       }
 
       return destinations;
