@@ -130,41 +130,36 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     List<Widget> appBarActions = [];
-    // ユーザーがログインしていない場合のみ、「ログイン」と「会員登録」ボタンを追加
-    print(session);
+    // ユーザーがログインしていない場合のみ、「ログイン」と「会員登録」ボタンを表示
     if (session == null) {
       appBarActions.addAll([
-        IconButton(
-          icon: Icon(Icons.login),
+        TextButton(
           onPressed: () {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => LoginPage()));
           },
+          child: Text('ログイン', style: TextStyle(color: Colors.white)),
         ),
-        IconButton(
-          icon: Icon(Icons.person_add),
+        TextButton(
           onPressed: () {
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => SignUpPage()));
           },
+          child: Text('会員登録（無料）', style: TextStyle(color: Colors.white)),
         ),
       ]);
-    }
-
-    // ユーザーがログインしている場合にのみログアウトボタンを表示
-    if (session != null) {
+    } else {
+      // ユーザーがログインしている場合にのみログアウトボタンを表示
       appBarActions.add(
-        IconButton(
-          icon: Icon(Icons.logout),
+        TextButton(
           onPressed: () async {
-            // Supabaseのログアウト処理を呼び出す
             await Supabase.instance.client.auth.signOut();
             // 任意の処理、例えばトップページに戻るなどをここに追加
           },
+          child: Text('ログアウト', style: TextStyle(color: Colors.white)),
         ),
       );
     }
-
     // 全ユーザーに表示するアクションを追加
     appBarActions.add(
       IconButton(
