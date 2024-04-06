@@ -35,6 +35,9 @@ class _MyHomePageState extends State<MyHomePage> {
           appBarTitle = 'MightyLINK 古民家カフェ お帰りなさい！';
         });
       } else {
+        setState(() {
+          selectedIndex = 0;
+        });
         print("ログインしていません");
         // ログアウトまたは未ログインの場合、デフォルトのタイトルを表示
         setState(() {
@@ -193,6 +196,80 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       ),
     );
+
+    List<BottomNavigationBarItem> _buildBottomNavigationBarItems() {
+      // 基本的なナビゲーションアイテム
+      List<BottomNavigationBarItem> items = [
+        BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Greeting'),
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.abc), label: 'Generator'),
+        BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Favorites'),
+        BottomNavigationBarItem(icon: Icon(Icons.filter_drama), label: '天気予報'),
+        BottomNavigationBarItem(icon: Icon(Icons.event), label: '予約フォーム'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today), label: 'TableCalender Example'),
+        BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Flutter Calendar Carousel Example'),
+      ];
+
+      // ユーザーがログインしている場合、ユーザー情報メニューを追加
+      if (Supabase.instance.client.auth.currentSession != null) {
+        items.add(
+            BottomNavigationBarItem(icon: Icon(Icons.people), label: 'ユーザー情報'));
+      }
+
+      return items;
+    }
+
+    List<NavigationRailDestination> _buildNavigationRailDestinations() {
+      // 基本的なナビゲーションアイテム
+      List<NavigationRailDestination> destinations = [
+        NavigationRailDestination(
+          icon: Icon(Icons.menu),
+          label: Text('Greeting'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.home),
+          label: Text('Home'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.abc),
+          label: Text('Generator'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.favorite),
+          label: Text('Favorites'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.filter_drama),
+          label: Text('天気予報'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.event),
+          label: Text('予約フォーム'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.calendar_today),
+          label: Text('TableCalender'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(Icons.calendar_today),
+          label: Text('Flutter Calendar Carousel'),
+        ),
+      ];
+
+      // ユーザーがログインしている場合、ユーザー情報メニューを追加
+      if (Supabase.instance.client.auth.currentSession != null) {
+        destinations.add(NavigationRailDestination(
+          icon: Icon(Icons.people),
+          label: Text('ユーザー情報'),
+        ));
+      }
+
+      return destinations;
+    }
+
     return Scaffold(
       appBar: AppBar(
           title: ScrollingText(
@@ -210,45 +287,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Expanded(child: mainArea),
                 SafeArea(
                   child: BottomNavigationBar(
-                    items: [
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.menu,
-                            color: Colors.black), // アイコンを選択してください
-                        label: 'Greeting',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.home, color: Colors.black),
-                        label: 'Home',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.abc, color: Colors.black),
-                        label: 'Generator',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.favorite, color: Colors.black),
-                        label: 'Favorites',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.filter_drama, color: Colors.black),
-                        label: '天気予報',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.event, color: Colors.black),
-                        label: '予約フォーム',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.calendar_today, color: Colors.black),
-                        label: 'TableCalender Example',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.calendar_today, color: Colors.black),
-                        label: 'Flutter Calendar Carousel Example',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.people, color: Colors.black),
-                        label: 'ユーザー情報',
-                      ),
-                    ],
+                    items: _buildBottomNavigationBarItems(),
                     currentIndex: selectedIndex,
                     selectedItemColor: Colors.black, // 選択されたアイテムの色
                     unselectedItemColor: Colors.grey, // 選択されていないアイテムの色
@@ -273,44 +312,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         selectedIndex = value;
                       });
                     },
-                    destinations: [
-                      NavigationRailDestination(
-                        icon: Icon(Icons.menu),
-                        label: Text('Greeting'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.home),
-                        label: Text('Home'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.abc),
-                        label: Text('Generator'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.favorite),
-                        label: Text('Favorites'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.filter_drama),
-                        label: Text('天気予報'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.event),
-                        label: Text('予約フォーム'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.calendar_today),
-                        label: Text('TableCalender'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.calendar_today),
-                        label: Text('Flutter Calendar Carousel'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.people),
-                        label: Text('ユーザー情報'),
-                      ),
-                    ],
+                    destinations: _buildNavigationRailDestinations(),
                     selectedIconTheme: IconThemeData(color: Colors.black),
                     unselectedIconTheme: IconThemeData(color: Colors.grey),
                     selectedLabelTextStyle: TextStyle(color: Colors.black),
