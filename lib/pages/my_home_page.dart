@@ -256,7 +256,7 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Center(
             child: Text(
-              session.user?.email ?? 'No Email', // ユーザーのメールアドレスまたはユーザー名
+              'ログインユーザー: ${userData!['lastname']} ${userData!['firstname']}',
               style: TextStyle(color: Colors.white),
             ),
           ),
