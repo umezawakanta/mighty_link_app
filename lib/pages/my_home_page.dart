@@ -9,6 +9,7 @@ import 'package:mighty_link_app/pages/login_page.dart';
 import 'package:mighty_link_app/pages/search_page.dart';
 import 'package:mighty_link_app/pages/sign_up_page.dart';
 import 'package:mighty_link_app/pages/site_map.dart';
+import 'package:mighty_link_app/pages/user_profile_page.dart';
 import 'package:mighty_link_app/pages/weekly_forecast_list.dart';
 import 'package:mighty_link_app/scrolling_text.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -29,16 +30,15 @@ class _MyHomePageState extends State<MyHomePage> {
     Supabase.instance.client.auth.onAuthStateChange.listen((AuthState state) {
       if (state.event == AuthChangeEvent.signedIn && state.session != null) {
         print(state.session!.user.email);
-        // ログインしている場合、AppBarにユーザー名を表示
+        // ログインしている場合
         setState(() {
-          appBarTitle =
-              'MightyLINK 古民家カフェ ログインユーザー： ${state.session!.user.email}'; // メールアドレスまたはユーザー名を表示
+          appBarTitle = 'MightyLINK 古民家カフェ お帰りなさい！';
         });
       } else {
         print("ログインしていません");
         // ログアウトまたは未ログインの場合、デフォルトのタイトルを表示
         setState(() {
-          appBarTitle = 'MightyLINK 古民家カフェ';
+          appBarTitle = 'MightyLINK 古民家カフェへようこそ';
         });
       }
     });
@@ -104,6 +104,8 @@ class _MyHomePageState extends State<MyHomePage> {
         page = BookingCalendar();
       case 7:
         page = FlutterCalendarCarousel();
+      case 8:
+        page = UserProfilePage();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -139,7 +141,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 .push(MaterialPageRoute(builder: (context) => LoginPage()));
           },
           style: TextButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: Colors.teal[700], // ボタンの背景色
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.teal[700], // ボタンの背景色
           ),
           child: Text('ログイン'),
         ),
@@ -150,25 +153,36 @@ class _MyHomePageState extends State<MyHomePage> {
                 .push(MaterialPageRoute(builder: (context) => SignUpPage()));
           },
           style: TextButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: Colors.teal[700], // ボタンの背景色
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.teal[700], // ボタンの背景色
           ),
           child: Text('会員登録（無料）'),
         ),
       ]);
     } else {
-      // ユーザーがログインしている場合にのみログアウトボタンを表示
-      appBarActions.add(
+      // ユーザーがログインしている場合、ログアウトボタンとユーザー名を表示
+      appBarActions.addAll([
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Center(
+            child: Text(
+              session.user?.email ?? 'No Email', // ユーザーのメールアドレスまたはユーザー名
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
         TextButton(
           onPressed: () async {
             await Supabase.instance.client.auth.signOut();
-            // 任意の処理、例えばトップページに戻るなどをここに追加
+            // ログアウト後の処理
           },
           style: TextButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: Colors.teal[700], // ボタンの背景色
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.teal[700], // ボタンの背景色
           ),
           child: Text('ログアウト'),
         ),
-      );
+      ]);
     }
     // 全ユーザーに表示するアクションを追加
     appBarActions.add(
@@ -179,7 +193,6 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       ),
     );
-    print(appBarActions.length);
     return Scaffold(
       appBar: AppBar(
           title: ScrollingText(
@@ -230,6 +243,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       BottomNavigationBarItem(
                         icon: Icon(Icons.calendar_today, color: Colors.black),
                         label: 'Flutter Calendar Carousel Example',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.people, color: Colors.black),
+                        label: 'ユーザー情報',
                       ),
                     ],
                     currentIndex: selectedIndex,
@@ -288,6 +305,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       NavigationRailDestination(
                         icon: Icon(Icons.calendar_today),
                         label: Text('Flutter Calendar Carousel'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.people),
+                        label: Text('ユーザー情報'),
                       ),
                     ],
                     selectedIconTheme: IconThemeData(color: Colors.black),
