@@ -22,15 +22,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 0;
   String appBarTitle = 'MightyLINK 古民家カフェ'; // AppBarのデフォルトタイトル
+  Map<String, dynamic>? userData;
+  List<Map<String, dynamic>>? userRoles;
+  late Future<void> _userFetchFuture; // ユーザーデータとロールを取得するFuture
 
   @override
   void initState() {
     super.initState();
+    _userFetchFuture = _fetchUserDataAndRoles(); // 非同期関数を一度だけ呼び出す
     // 認証状態のリッスンを設定
     Supabase.instance.client.auth.onAuthStateChange.listen((AuthState state) {
       if (state.event == AuthChangeEvent.signedIn && state.session != null) {
-        print(state.session!.user.email);
-        // ログインしている場合
         setState(() {
           appBarTitle = 'MightyLINK 古民家カフェ お帰りなさい！';
         });
@@ -47,6 +49,57 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  Future<void> _fetchUserDataAndRoles() async {
+    await _fetchUserData(); // ユーザーデータを取得
+    await _fetchUserRoles(); // ユーザーロールを取得
+  }
+
+  Future<void> _fetchUserData() async {
+    print('fetching user data');
+    final user = Supabase.instance.client.auth.currentUser;
+    print('user: $user');
+    if (user != null) {
+      final response = await Supabase.instance.client
+          .from('users') // 'users' はユーザー情報を保存しているテーブル名
+          .select() // ここで必要な列を指定できます。全ての列を取得する場合は '*' を使用します。
+          .eq('id', user.id) // ログインユーザーのIDでフィルタリング
+          .single(); // 単一のレコードを返します
+      print('response: $response');
+      if (response.isNotEmpty) {
+        setState(() {
+          userData = response;
+        });
+      }
+    }
+  }
+
+  Future<void> _fetchUserRoles() async {
+    print('fetching user Roles data');
+    final user = Supabase.instance.client.auth.currentUser;
+    print('user: $user');
+    if (user != null) {
+      final response =
+          await Supabase.instance.client.from('user_roles').select();
+
+      print('response: $response');
+      if (response.isNotEmpty) {
+        setState(() {
+          userRoles = response;
+        });
+      }
+    }
+  }
+
+  bool hasAdminRole() {
+    if (userRoles == null) return false;
+    return userRoles!.any((role) => role["role"] == "admin");
+  }
+
+  bool hasDeveloperRole() {
+    if (userRoles == null) return false;
+    return userRoles!.any((role) => role["role"] == "developer");
+  }
+
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
@@ -61,13 +114,15 @@ class _MyHomePageState extends State<MyHomePage> {
           "icon": Icons.abc,
           "label": "Generator",
           "page": GeneratorPage(),
-          "requiresLogin": true
+          "requiresLogin": true,
+          "requiresDeveloperRole": true
         },
         {
           "icon": Icons.favorite,
           "label": "Favorites",
           "page": FavoritesPage(),
-          "requiresLogin": true
+          "requiresLogin": true,
+          "requiresDeveloperRole": true
         },
         {
           "icon": Icons.filter_drama,
@@ -112,7 +167,8 @@ class _MyHomePageState extends State<MyHomePage> {
               WeeklyForecastList(),
             ],
           ),
-          "requiresLogin": true
+          "requiresLogin": true,
+          "requiresDeveloperRole": true
         },
         {
           "icon": Icons.event,
@@ -123,13 +179,15 @@ class _MyHomePageState extends State<MyHomePage> {
           "icon": Icons.calendar_today,
           "label": "TableCalender Example",
           "page": BookingCalendar(),
-          "requiresLogin": true
+          "requiresLogin": true,
+          "requiresDeveloperRole": true
         },
         {
           "icon": Icons.calendar_today,
           "label": "Flutter Calendar Carousel Example",
           "page": FlutterCalendarCarousel(),
-          "requiresLogin": true
+          "requiresLogin": true,
+          "requiresDeveloperRole": true
         },
         {
           "icon": Icons.people,
@@ -140,23 +198,16 @@ class _MyHomePageState extends State<MyHomePage> {
       ];
 
       // ログインしている場合はすべての項目を、そうでない場合はrequiresLoginがfalseまたは未設定の項目のみを返す
+      // 加えて、developerロールが必要な項目はhasDeveloperRole()の結果に基づいてフィルタリング
       return session != null
-          ? allItems
+          ? allItems.where((item) {
+              final requiresDeveloperRole =
+                  item["requiresDeveloperRole"] ?? false;
+              return !requiresDeveloperRole ||
+                  (requiresDeveloperRole && hasDeveloperRole());
+            }).toList()
           : allItems.where((item) => item["requiresLogin"] != true).toList();
     }
-
-    var navItems = getNavItems();
-    page = navItems[selectedIndex]["page"];
-
-    // The container for the current page, with its background color
-    // and subtle switching animation.
-    var mainArea = ColoredBox(
-      color: colorScheme.surfaceVariant,
-      child: AnimatedSwitcher(
-        duration: Duration(milliseconds: 200),
-        child: page,
-      ),
-    );
 
     Future<void> _navigateAndLogin(BuildContext context) async {
       final result = await Navigator.push(
@@ -233,138 +284,109 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     List<BottomNavigationBarItem> _buildBottomNavigationBarItems() {
-      // 基本的なナビゲーションアイテム
-      List<BottomNavigationBarItem> items = [
-        BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Greeting'),
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.event), label: '予約フォーム'),
-      ];
-
-      // ユーザーがログインしている場合、ユーザー情報メニューを追加
-      if (Supabase.instance.client.auth.currentSession != null) {
-        items.addAll([
-          BottomNavigationBarItem(icon: Icon(Icons.abc), label: 'Generator'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), label: 'Favorites'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.filter_drama), label: '天気予報'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today), label: 'TableCalender Example'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              label: 'Flutter Calendar Carousel Example'),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'ユーザー情報')
-        ]);
-      }
-
-      return items;
+      var items = getNavItems();
+      return items.map((item) {
+        return BottomNavigationBarItem(
+          icon: Icon(item['icon']),
+          label: item['label'],
+        );
+      }).toList();
     }
 
     List<NavigationRailDestination> _buildNavigationRailDestinations() {
-      // 基本的なナビゲーションアイテム
-      List<NavigationRailDestination> destinations = [
-        NavigationRailDestination(
-          icon: Icon(Icons.menu),
-          label: Text('Greeting'),
-        ),
-        NavigationRailDestination(
-          icon: Icon(Icons.home),
-          label: Text('Home'),
-        ),
-        NavigationRailDestination(
-          icon: Icon(Icons.event),
-          label: Text('予約フォーム'),
-        ),
-      ];
-
-      // ユーザーがログインしている場合、ユーザー情報メニューを追加
-      if (Supabase.instance.client.auth.currentSession != null) {
-        destinations.addAll([
-          NavigationRailDestination(
-            icon: Icon(Icons.abc),
-            label: Text('Generator'),
-          ),
-          NavigationRailDestination(
-            icon: Icon(Icons.favorite),
-            label: Text('Favorites'),
-          ),
-          NavigationRailDestination(
-            icon: Icon(Icons.filter_drama),
-            label: Text('天気予報'),
-          ),
-          NavigationRailDestination(
-            icon: Icon(Icons.calendar_today),
-            label: Text('TableCalender'),
-          ),
-          NavigationRailDestination(
-            icon: Icon(Icons.calendar_today),
-            label: Text('Flutter Calendar Carousel'),
-          ),
-          NavigationRailDestination(
-            icon: Icon(Icons.people),
-            label: Text('ユーザー情報'),
-          )
-        ]);
-      }
-
-      return destinations;
+      var items = getNavItems();
+      return items.map((item) {
+        return NavigationRailDestination(
+          icon: Icon(item['icon']),
+          label: Text(item['label']),
+        );
+      }).toList();
     }
 
-    return Scaffold(
-      appBar: AppBar(
-          title: ScrollingText(
-              text: appBarTitle, style: TextStyle(color: Colors.white)),
-          backgroundColor: Colors.teal[100],
-          actions: appBarActions),
-      // TODO: Add a CustomScrollView
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          if (constraints.maxWidth < 450) {
-            // Use a more mobile-friendly layout with BottomNavigationBar
-            // on narrow screens.
-            return Column(
-              children: [
-                Expanded(child: mainArea),
-                SafeArea(
-                  child: BottomNavigationBar(
-                    items: _buildBottomNavigationBarItems(),
-                    currentIndex: selectedIndex,
-                    selectedItemColor: Colors.black, // 選択されたアイテムの色
-                    unselectedItemColor: Colors.grey, // 選択されていないアイテムの色
-                    onTap: (value) {
-                      setState(() {
-                        selectedIndex = value;
-                      });
-                    },
-                  ),
-                )
-              ],
-            );
+    return FutureBuilder(
+        future: _userFetchFuture, // initStateで定義したFutureを使用
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // データの取得中はローディングインジケータを表示
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            // エラーが発生した場合はエラーメッセージを表示
+            return Text('Error: ${snapshot.error}');
           } else {
-            return Row(
-              children: [
-                SafeArea(
-                  child: NavigationRail(
-                    extended: constraints.maxWidth >= 600,
-                    selectedIndex: selectedIndex,
-                    onDestinationSelected: (value) {
-                      setState(() {
-                        selectedIndex = value;
-                      });
-                    },
-                    destinations: _buildNavigationRailDestinations(),
-                    selectedIconTheme: IconThemeData(color: Colors.black),
-                    unselectedIconTheme: IconThemeData(color: Colors.grey),
-                    selectedLabelTextStyle: TextStyle(color: Colors.black),
-                    unselectedLabelTextStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-                Expanded(child: mainArea),
-              ],
+            // データの取得が完了したら、アプリのメイン画面を表示
+            var navItems = getNavItems();
+            page = navItems[selectedIndex]["page"];
+
+            // The container for the current page, with its background color
+            // and subtle switching animation.
+            var mainArea = ColoredBox(
+              color: colorScheme.surfaceVariant,
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 200),
+                child: page,
+              ),
+            );
+            return Scaffold(
+              appBar: AppBar(
+                  title: ScrollingText(
+                      text: appBarTitle, style: TextStyle(color: Colors.white)),
+                  backgroundColor: Colors.teal[100],
+                  actions: appBarActions),
+              // TODO: Add a CustomScrollView
+              body: LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth < 450) {
+                    // Use a more mobile-friendly layout with BottomNavigationBar
+                    // on narrow screens.
+                    return Column(
+                      children: [
+                        Expanded(child: mainArea),
+                        SafeArea(
+                          child: BottomNavigationBar(
+                            items: _buildBottomNavigationBarItems(),
+                            currentIndex: selectedIndex,
+                            selectedItemColor: Colors.black, // 選択されたアイテムの色
+                            unselectedItemColor: Colors.grey, // 選択されていないアイテムの色
+                            onTap: (value) {
+                              setState(() {
+                                selectedIndex = value;
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    );
+                  } else {
+                    return Row(
+                      children: [
+                        SafeArea(
+                          child: NavigationRail(
+                            extended: constraints.maxWidth >= 600,
+                            selectedIndex: selectedIndex,
+                            onDestinationSelected: (value) {
+                              setState(() {
+                                selectedIndex = value;
+                              });
+                            },
+                            destinations: _buildNavigationRailDestinations(),
+                            selectedIconTheme:
+                                IconThemeData(color: Colors.black),
+                            unselectedIconTheme:
+                                IconThemeData(color: Colors.grey),
+                            selectedLabelTextStyle:
+                                TextStyle(color: Colors.black),
+                            unselectedLabelTextStyle:
+                                TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                        Expanded(child: mainArea),
+                      ],
+                    );
+                  }
+                },
+              ),
             );
           }
-        },
-      ),
-    );
+        });
   }
 }
