@@ -29,7 +29,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _userFetchFuture = _fetchUserDataAndRoles(); // 非同期関数を一度だけ呼び出す
     // 認証状態のリッスンを設定
     Supabase.instance.client.auth.onAuthStateChange.listen((AuthState state) {
       if (state.event == AuthChangeEvent.signedIn && state.session != null) {
@@ -47,6 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       }
     });
+    // 初期のFutureをセットアップ（ログイン状態によっては何もしないかもしれない）
+    _userFetchFuture = _fetchUserDataAndRoles();
   }
 
   Future<void> _fetchUserDataAndRoles() async {
@@ -177,14 +178,14 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         {
           "icon": Icons.calendar_today,
-          "label": "TableCalender Example",
+          "label": "TableCalender",
           "page": BookingCalendar(),
           "requiresLogin": true,
           "requiresDeveloperRole": true
         },
         {
           "icon": Icons.calendar_today,
-          "label": "Flutter Calendar Carousel Example",
+          "label": "Flutter Calendar Carousel",
           "page": FlutterCalendarCarousel(),
           "requiresLogin": true,
           "requiresDeveloperRole": true

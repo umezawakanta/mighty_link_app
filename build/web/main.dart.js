@@ -94949,13 +94949,13 @@ a0(){return new A.XM(B.i)}}
 A.XM.prototype={
 am(){var s,r=this
 r.aE()
-r.w=r.ud()
 s=$.ds().b
 s===$&&A.b()
 s=s.z
 s===$&&A.b()
 s=s.as
-new A.iO(s,s.$ti.i("iO<1>")).hM(new A.atz(r))},
+new A.iO(s,s.$ti.i("iO<1>")).hM(new A.atz(r))
+r.w=r.ud()},
 ud(){var s=0,r=A.J(t.H),q=this
 var $async$ud=A.K(function(a,b){if(a===1)return A.G(b,r)
 while(true)switch(s){case 0:s=2
@@ -95052,7 +95052,7 @@ A.atv.prototype={
 $1(a){return J.d(J.ar(a,"role"),"developer")},
 $S:120}
 A.atr.prototype={
-$0(){var s=null,r="requiresDeveloperRole",q=t.N,p=t.z,o=A.as(["icon",B.lZ,"label","Greeting","page",new A.B6(s)],q,p),n=A.as(["icon",B.PP,"label","Home","page",new A.RP(s)],q,p),m=A.as(["icon",B.PV,"label","Generator","page",new A.qc(s),"requiresLogin",!0,r,!0],q,p),l=A.as(["icon",B.lY,"label","Favorites","page",new A.q2(s),"requiresLogin",!0,r,!0],q,p),k=A.a([B.In,B.Io,B.Ip],t.EC),j=A.af("Weekly Forecast",s,s,s,s,s,s),i=A.a([B.px,B.z],t.t_),h=A.a([o,n,m,l,A.as(["icon",B.PO,"label","\u5929\u6c17\u4e88\u5831","page",A.aG8(B.y,s,s,s,!1,B.ag,!1,A.a([new A.Ei(new A.AM(j,A.pI(A.aC4("https://picsum.photos/200/200?random=1",B.kP,s,s),new A.cg(s,s,s,s,s,new A.ks(B.cF,B.L,B.bN,i,s,s),B.ar),B.hP),k,s),B.px,200,!0,!0,new A.ats(),s),new A.TB(s)],t.p)),"requiresLogin",!0,r,!0],q,p),A.as(["icon",B.PL,"label","\u4e88\u7d04\u30d5\u30a9\u30fc\u30e0","page",new A.pq(s)],q,p),A.as(["icon",B.i2,"label","TableCalender Example","page",new A.nj(s),"requiresLogin",!0,r,!0],q,p),A.as(["icon",B.i2,"label","Flutter Calendar Carousel Example","page",new A.nB(s),"requiresLogin",!0,r,!0],q,p),A.as(["icon",B.PR,"label","\u30e6\u30fc\u30b6\u30fc\u60c5\u5831","page",new A.Fm(s),"requiresLogin",!0],q,p)],t.H7)
+$0(){var s=null,r="requiresDeveloperRole",q=t.N,p=t.z,o=A.as(["icon",B.lZ,"label","Greeting","page",new A.B6(s)],q,p),n=A.as(["icon",B.PP,"label","Home","page",new A.RP(s)],q,p),m=A.as(["icon",B.PV,"label","Generator","page",new A.qc(s),"requiresLogin",!0,r,!0],q,p),l=A.as(["icon",B.lY,"label","Favorites","page",new A.q2(s),"requiresLogin",!0,r,!0],q,p),k=A.a([B.In,B.Io,B.Ip],t.EC),j=A.af("Weekly Forecast",s,s,s,s,s,s),i=A.a([B.px,B.z],t.t_),h=A.a([o,n,m,l,A.as(["icon",B.PO,"label","\u5929\u6c17\u4e88\u5831","page",A.aG8(B.y,s,s,s,!1,B.ag,!1,A.a([new A.Ei(new A.AM(j,A.pI(A.aC4("https://picsum.photos/200/200?random=1",B.kP,s,s),new A.cg(s,s,s,s,s,new A.ks(B.cF,B.L,B.bN,i,s,s),B.ar),B.hP),k,s),B.px,200,!0,!0,new A.ats(),s),new A.TB(s)],t.p)),"requiresLogin",!0,r,!0],q,p),A.as(["icon",B.PL,"label","\u4e88\u7d04\u30d5\u30a9\u30fc\u30e0","page",new A.pq(s)],q,p),A.as(["icon",B.i2,"label","TableCalender","page",new A.nj(s),"requiresLogin",!0,r,!0],q,p),A.as(["icon",B.i2,"label","Flutter Calendar Carousel","page",new A.nB(s),"requiresLogin",!0,r,!0],q,p),A.as(["icon",B.PR,"label","\u30e6\u30fc\u30b6\u30fc\u60c5\u5831","page",new A.Fm(s),"requiresLogin",!0],q,p)],t.H7)
 q=t.w_
 p=q.i("p.E")
 return this.b!=null?A.ac(new A.aO(h,new A.att(this.a),q),!0,p):A.ac(new A.aO(h,new A.atu(),q),!0,p)},
