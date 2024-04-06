@@ -31,7 +31,8 @@ class _MyHomePageState extends State<MyHomePage> {
         print(state.session!.user.email);
         // ログインしている場合、AppBarにユーザー名を表示
         setState(() {
-          appBarTitle = 'MightyLINK 古民家カフェ ログインユーザー： ${state.session!.user.email}'; // メールアドレスまたはユーザー名を表示
+          appBarTitle =
+              'MightyLINK 古民家カフェ ログインユーザー： ${state.session!.user.email}'; // メールアドレスまたはユーザー名を表示
         });
       } else {
         print("ログインしていません");
@@ -46,7 +47,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
-
+    // Supabaseから現在の認証セッションを取得
+    final session = Supabase.instance.client.auth.currentSession;
     Widget page;
     switch (selectedIndex) {
       case 0:
@@ -116,34 +118,54 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
 
+    Future<void> _navigateAndLogin(BuildContext context) async {
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+      if (result == true) {
+        // ログインが成功した場合の処理をここに記述します。
+        print("Logged in successfully.");
+      }
+    }
+
+    List<Widget> appBarActions = [];
+    // ユーザーがログインしていない場合のみ、「ログイン」と「会員登録」ボタンを追加
+    print(session);
+    if (session == null) {
+      appBarActions.addAll([
+        IconButton(
+          icon: Icon(Icons.login),
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => LoginPage()));
+          },
+        ),
+        IconButton(
+          icon: Icon(Icons.person_add),
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => SignUpPage()));
+          },
+        ),
+      ]);
+    }
+    // 全ユーザーに表示するアクションを追加
+    appBarActions.add(
+      IconButton(
+        icon: Icon(Icons.search),
+        onPressed: () {
+          showSearch(context: context, delegate: SearchPage());
+        },
+      ),
+    );
+    print(appBarActions.length);
     return Scaffold(
       appBar: AppBar(
-        title: ScrollingText(text: appBarTitle, style: TextStyle(color: Colors.white)),
+        title: ScrollingText(
+            text: appBarTitle, style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.teal[100],
-        actions: <Widget>[
-          IconButton(
-            // ログインボタンを追加
-            icon: Icon(Icons.login),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => LoginPage())); // ログインページに遷移
-            },
-          ),
-          IconButton(
-            // 会員登録ボタンを追加
-            icon: Icon(Icons.person_add),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => SignUpPage())); // 会員登録ページに遷移
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              showSearch(context: context, delegate: SearchPage()); // 検索ページを表示
-            },
-          ),
-        ],
+        actions: appBarActions
       ),
       // TODO: Add a CustomScrollView
       body: LayoutBuilder(

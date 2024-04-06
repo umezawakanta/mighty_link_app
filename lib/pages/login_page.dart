@@ -72,7 +72,8 @@ class _LoginPageState extends State<LoginPage> {
         // ログイン成功
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Logged in successfully!')));
-        // 成功時の処理をここに記述
+        // 成功時の画面に戻る
+        Navigator.pop(context, true); // `true` はログインが成功したことを意味します
       } else {
         // ログイン失敗
         ScaffoldMessenger.of(context)
