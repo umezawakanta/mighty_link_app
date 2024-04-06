@@ -1,42 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:email_validator/email_validator.dart'; // email_validator パッケージを追加してください
+import 'package:email_validator/email_validator.dart';
 
-class SignUpPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
-  final TextEditingController _usernameController = TextEditingController();
+class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>(); // フォームキーを追加
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Sign Up'),
+        title: Text('Login'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: _formKey, // Formウィジェットを追加
+          key: _formKey,
           child: Column(
             children: [
-              TextFormField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  labelText: 'Username',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your username';
-                  }
-                  return null;
-                },
-              ),
               TextFormField(
                 controller: _emailController,
                 decoration: InputDecoration(
@@ -64,12 +51,10 @@ class _SignUpPageState extends State<SignUpPage> {
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // 会員登録処理を呼び出す前にバリデーションを実行
-                    _registerUser(_usernameController.text,
-                        _emailController.text, _passwordController.text);
+                    _loginUser(_emailController.text, _passwordController.text);
                   }
                 },
-                child: Text('Sign Up'),
+                child: Text('Login'),
               ),
             ],
           ),
@@ -78,32 +63,30 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  // 会員登録処理の実装
-  Future<void> _registerUser(
-      String username, String email, String password) async {
+  // Login process implementation
+  Future<void> _loginUser(String email, String password) async {
     try {
       final response = await Supabase.instance.client.auth
-          .signUp(email: email, password: password);
-      print(response.toString());
-      // Check if registration was successful
-      if (response.user != null) {
+          .signInWithPassword(email: email, password: password);
+      if (response.session != null) {
+        // ログイン成功
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Registered successfully!')));
+            .showSnackBar(SnackBar(content: Text('Logged in successfully!')));
+        // 成功時の処理をここに記述
       } else {
-        // Handle the case where the user is null
+        // ログイン失敗
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Failed to register')));
+            .showSnackBar(SnackBar(content: Text('Login failed')));
       }
     } catch (e) {
-      // Catch any kind of exception here
+      print('Exception during login: $e');
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+          .showSnackBar(SnackBar(content: Text('Login exception: $e')));
     }
   }
 
   @override
   void dispose() {
-    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();

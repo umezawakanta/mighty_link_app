@@ -5,10 +5,13 @@ import 'package:mighty_link_app/pages/favorites_page.dart';
 import 'package:mighty_link_app/pages/flutter_calendar_carousel.dart';
 import 'package:mighty_link_app/pages/generator_page.dart';
 import 'package:mighty_link_app/pages/greeting_page.dart';
+import 'package:mighty_link_app/pages/login_page.dart';
 import 'package:mighty_link_app/pages/search_page.dart';
 import 'package:mighty_link_app/pages/sign_up_page.dart';
 import 'package:mighty_link_app/pages/site_map.dart';
 import 'package:mighty_link_app/pages/weekly_forecast_list.dart';
+import 'package:mighty_link_app/scrolling_text.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -17,6 +20,28 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 0;
+  String appBarTitle = 'MightyLINK 古民家カフェ'; // AppBarのデフォルトタイトル
+
+  @override
+  void initState() {
+    super.initState();
+    // 認証状態のリッスンを設定
+    Supabase.instance.client.auth.onAuthStateChange.listen((AuthState state) {
+      if (state.event == AuthChangeEvent.signedIn && state.session != null) {
+        print(state.session!.user.email);
+        // ログインしている場合、AppBarにユーザー名を表示
+        setState(() {
+          appBarTitle = 'MightyLINK 古民家カフェ ログインユーザー： ${state.session!.user.email}'; // メールアドレスまたはユーザー名を表示
+        });
+      } else {
+        print("ログインしていません");
+        // ログアウトまたは未ログインの場合、デフォルトのタイトルを表示
+        setState(() {
+          appBarTitle = 'MightyLINK 古民家カフェ ログインしていません';
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,13 +118,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('MightyLINK App'),
-        backgroundColor: Colors.teal[800],
+        title: ScrollingText(text: appBarTitle, style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.teal[100],
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.search),
+            // ログインボタンを追加
+            icon: Icon(Icons.login),
             onPressed: () {
-              showSearch(context: context, delegate: SearchPage()); // 検索ページを表示
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => LoginPage())); // ログインページに遷移
             },
           ),
           IconButton(
@@ -108,6 +135,12 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => SignUpPage())); // 会員登録ページに遷移
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(context: context, delegate: SearchPage()); // 検索ページを表示
             },
           ),
         ],
