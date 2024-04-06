@@ -150,6 +150,21 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ]);
     }
+
+    // ユーザーがログインしている場合にのみログアウトボタンを表示
+    if (session != null) {
+      appBarActions.add(
+        IconButton(
+          icon: Icon(Icons.logout),
+          onPressed: () async {
+            // Supabaseのログアウト処理を呼び出す
+            await Supabase.instance.client.auth.signOut();
+            // 任意の処理、例えばトップページに戻るなどをここに追加
+          },
+        ),
+      );
+    }
+
     // 全ユーザーに表示するアクションを追加
     appBarActions.add(
       IconButton(
@@ -162,11 +177,10 @@ class _MyHomePageState extends State<MyHomePage> {
     print(appBarActions.length);
     return Scaffold(
       appBar: AppBar(
-        title: ScrollingText(
-            text: appBarTitle, style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.teal[100],
-        actions: appBarActions
-      ),
+          title: ScrollingText(
+              text: appBarTitle, style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.teal[100],
+          actions: appBarActions),
       // TODO: Add a CustomScrollView
       body: LayoutBuilder(
         builder: (context, constraints) {
