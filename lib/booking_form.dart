@@ -71,12 +71,10 @@ class _BookingFormState extends State<BookingForm> {
       Map<DateTime, List<dynamic>> eventsMap = {};
       for (var reservation in data) {
         final date = DateTime.parse(reservation['date']);
-        final name = reservation['name']; // ここで予約の名前を取得しています
-
         if (!eventsMap.containsKey(date)) {
           eventsMap[date] = [];
         }
-        eventsMap[date]!.add(name); // 名前をリストに追加
+        eventsMap[date]!.add(reservation); // 名前をリストに追加
       }
       setState(() {
         _eventsMap = eventsMap;
@@ -105,6 +103,40 @@ class _BookingFormState extends State<BookingForm> {
           ),
         ),
       ),
+    );
+  }
+
+  void _showEventDetailsDialog(DateTime date, List<dynamic> events) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('イベント詳細 (${DateFormat('yyyy年MM月dd日').format(date)})'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: events.map((event) {
+                // イベント詳細を取得して表示
+                String name = event['name'] ?? '不明なイベント';
+                String time = event['time'] ?? '時間不明';
+                String count = event['count'].toString();
+                return ListTile(
+                  title: Text('$name 様'),
+                  subtitle: Text('時間: $time ~ / 人数: $count 名様'),
+                );
+              }).toList(),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('閉じる'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            // 予約追加・編集のオプションを追加する処理を実装
+          ],
+        );
+      },
     );
   }
 
@@ -159,8 +191,6 @@ class _BookingFormState extends State<BookingForm> {
                 // 日付のみの部分を取得（時間を切り捨てる）
                 final dateWithoutTime =
                     DateTime(localDate.year, localDate.month, localDate.day);
-                print('dateWithoutTime: $dateWithoutTime');
-                print('_eventMaps[dateWithoutTime] : ${_eventsMap[dateWithoutTime]}');
                 return _eventsMap[dateWithoutTime] ?? [];
               },
               selectedDayPredicate: (day) {
@@ -168,6 +198,16 @@ class _BookingFormState extends State<BookingForm> {
                 return isSameDay(_selectedDate, day);
               },
               onDaySelected: (selectedDay, focusedDay) {
+                // Supabaseから取得したUTCの日付をローカルタイムゾーンに変換
+                final localDate = selectedDay.toLocal();
+                // 日付のみの部分を取得（時間を切り捨てる）
+                final dateWithoutTime =
+                    DateTime(localDate.year, localDate.month, localDate.day);
+                print('dateWithoutTime : $dateWithoutTime');
+                if (_eventsMap[dateWithoutTime] != null) {
+                  _showEventDetailsDialog(
+                      dateWithoutTime, _eventsMap[dateWithoutTime]!);
+                }
                 setState(() {
                   _selectedDate = selectedDay; // 選択した日付を更新
                   // focusedDayを更新して、選択した日付が常に中心に表示されるようにする
