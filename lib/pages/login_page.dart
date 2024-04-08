@@ -33,6 +33,10 @@ class _LoginPageState extends State<LoginPage> {
                 validator: (value) => EmailValidator.validate(value!)
                     ? null
                     : "Please enter a valid email",
+                onFieldSubmitted: (value) {
+                  // Email入力後にEnterキーが押されたら、パスワードフィールドにフォーカスを移動
+                  FocusScope.of(context).nextFocus();
+                },
               ),
               TextFormField(
                 controller: _passwordController,
@@ -45,6 +49,12 @@ class _LoginPageState extends State<LoginPage> {
                     return 'Password must be at least 6 characters long';
                   }
                   return null;
+                },
+                onFieldSubmitted: (value) {
+                  // Password入力後にEnterキーが押されたらログイン処理を実行
+                  if (_formKey.currentState!.validate()) {
+                    _loginUser(_emailController.text, _passwordController.text);
+                  }
                 },
               ),
               SizedBox(height: 20),

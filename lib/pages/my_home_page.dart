@@ -227,8 +227,16 @@ class _MyHomePageState extends State<MyHomePage> {
       appBarActions.addAll([
         TextButton(
           onPressed: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (context) => LoginPage()));
+            showDialog(
+              context: context,
+              builder: (context) => Dialog(
+                child: SizedBox(
+                  width: 300,
+                  height: 400,
+                  child: LoginPage(),
+                ),
+              ),
+            );
           },
           style: TextButton.styleFrom(
             foregroundColor: Colors.white,
@@ -256,7 +264,9 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.symmetric(horizontal: 8.0),
           child: Center(
             child: Text(
-              'ログインユーザー: ${userData!['lastname']} ${userData!['firstname']}',
+              userData != null
+                  ? 'ログインユーザー: ${userData!['lastname']} ${userData!['firstname']}'
+                  : 'ログインユーザー:',
               style: TextStyle(color: Colors.white),
             ),
           ),
