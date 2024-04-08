@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:table_calendar/table_calendar.dart'; // table_calendarパッケージをインポート
 
 class BookingForm extends StatefulWidget {
@@ -13,6 +14,14 @@ class _BookingFormState extends State<BookingForm> {
   String _email = '';
   DateTime _selectedDate = DateTime.now(); // 日付選択のための状態変数
   CalendarFormat _calendarFormat = CalendarFormat.month; // カレンダーの形式
+  // カレンダーイベントの状態
+  Map<DateTime, List<dynamic>> _eventsMap = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchReservations(); // 予約データをフェッチ
+  }
 
   void _submitForm() {
     final form = _formKey.currentState;
@@ -44,6 +53,59 @@ class _BookingFormState extends State<BookingForm> {
         _selectedDate = picked;
       });
     }
+  }
+
+  // Supabaseクライアントを初期化
+  final supabaseClient = Supabase.instance.client;
+
+  // Supabaseから予約データを非同期で取得する関数
+  Future<void> _fetchReservations() async {
+    final response = await supabaseClient
+        .from('reservations')
+        .select()
+        .order('date', ascending: true);
+
+    print('response: $response');
+    if (response.isNotEmpty) {
+      final data = response as List<dynamic>;
+      Map<DateTime, List<dynamic>> eventsMap = {};
+      for (var reservation in data) {
+        final date = DateTime.parse(reservation['date']);
+        final name = reservation['name']; // ここで予約の名前を取得しています
+
+        if (!eventsMap.containsKey(date)) {
+          eventsMap[date] = [];
+        }
+        eventsMap[date]!.add(name); // 名前をリストに追加
+      }
+      setState(() {
+        _eventsMap = eventsMap;
+      });
+    } else {
+      print('Error fetching reservations: ${response}');
+      throw response;
+    }
+  }
+
+  Widget _buildEventsMarker(DateTime date, List<dynamic> events) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        color: Colors.blue[400],
+      ),
+      width: 16.0,
+      height: 16.0,
+      child: Center(
+        child: Text(
+          '${events.length}',
+          style: TextStyle().copyWith(
+            color: Colors.white,
+            fontSize: 12.0,
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -80,6 +142,27 @@ class _BookingFormState extends State<BookingForm> {
               lastDay: DateTime.utc(2030, 3, 14),
               focusedDay: _selectedDate,
               calendarFormat: _calendarFormat,
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, date, events) {
+                  if (events.isNotEmpty) {
+                    return Positioned(
+                      right: 1,
+                      bottom: 1,
+                      child: _buildEventsMarker(date, events),
+                    );
+                  }
+                },
+              ),
+              eventLoader: (date) {
+                // Supabaseから取得したUTCの日付をローカルタイムゾーンに変換
+                final localDate = date.toLocal();
+                // 日付のみの部分を取得（時間を切り捨てる）
+                final dateWithoutTime =
+                    DateTime(localDate.year, localDate.month, localDate.day);
+                print('dateWithoutTime: $dateWithoutTime');
+                print('_eventMaps[dateWithoutTime] : ${_eventsMap[dateWithoutTime]}');
+                return _eventsMap[dateWithoutTime] ?? [];
+              },
               selectedDayPredicate: (day) {
                 // 同じ日付が選択されたかどうかを判断
                 return isSameDay(_selectedDate, day);
