@@ -13,6 +13,8 @@ class _BookingFormState extends State<BookingForm> {
   String _name = '';
   String _email = '';
   DateTime _selectedDate = DateTime.now(); // 日付選択のための状態変数
+  TimeOfDay? _time; // 時間入力用の状態変数
+  int _count = 1; // 人数入力用の状態変数
   CalendarFormat _calendarFormat = CalendarFormat.month; // カレンダーの形式
   // カレンダーイベントの状態
   Map<DateTime, List<dynamic>> _eventsMap = {};
@@ -34,7 +36,7 @@ class _BookingFormState extends State<BookingForm> {
       print('メールアドレス: $_email');
       print('選択された日付: ${DateFormat('yyyy年MM月dd日').format(_selectedDate)}');
       // フォームが有効な場合、Supabaseにデータを送信
-      _addReservation(_name, _email, _selectedDate);
+      _addReservation(_name, _email, _selectedDate, _time, _count);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
@@ -44,12 +46,13 @@ class _BookingFormState extends State<BookingForm> {
   }
 
 // 予約をSupabaseに送信する処理
-  Future<void> _addReservation(String name, String email, DateTime date) async {
+  Future<void> _addReservation(String name, String email, DateTime date,
+      TimeOfDay? time, int count) async {
     final response = await supabaseClient.from('reservations').insert({
       'name': name,
       'date': DateFormat('yyyy-MM-dd').format(date),
-      'time': '12:00', // 時間を固定で'12:00'に設定
-      'count': 1,
+      'time': time != null ? '${time.hour}:${time.minute}' : '未定',
+      'count': count,
       'email': email,
     });
 
@@ -66,6 +69,19 @@ class _BookingFormState extends State<BookingForm> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
+      });
+    }
+  }
+
+  // 時間を選択するためのメソッド
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (pickedTime != null) {
+      setState(() {
+        _time = pickedTime;
       });
     }
   }
@@ -183,6 +199,26 @@ class _BookingFormState extends State<BookingForm> {
                 return null;
               },
               onSaved: (value) => _email = value!,
+            ),
+            // 人数入力用のTextFormFieldを追加
+            TextFormField(
+              decoration: InputDecoration(labelText: '人数'),
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value == null ||
+                    value.isEmpty ||
+                    int.tryParse(value) == null) {
+                  return '正しい人数を入力してください';
+                }
+                return null;
+              },
+              onSaved: (value) => _count = int.parse(value!),
+            ),
+            // 時間選択用のボタンを追加
+            ElevatedButton(
+              onPressed: () => _selectTime(context),
+              child: Text(
+                  _time == null ? '時間を選択' : '時間: ${_time!.format(context)}'),
             ),
             TableCalendar(
               firstDay: DateTime.utc(2010, 10, 16),
