@@ -210,17 +210,6 @@ class _MyHomePageState extends State<MyHomePage> {
           : allItems.where((item) => item["requiresLogin"] != true).toList();
     }
 
-    Future<void> navigateAndLogin(BuildContext context) async {
-      final result = await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
-      if (result == true) {
-        // ログインが成功した場合の処理をここに記述します。
-        print("Logged in successfully.");
-      }
-    }
-
     List<Widget> appBarActions = [];
     // ユーザーがログインしていない場合のみ、「ログイン」と「会員登録」ボタンを表示
     if (session == null) {
