@@ -183,6 +183,7 @@ class _BookingFormState extends State<BookingForm> {
                       child: _buildEventsMarker(date, events),
                     );
                   }
+                  return null;
                 },
               ),
               eventLoader: (date) {
