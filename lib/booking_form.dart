@@ -33,12 +33,27 @@ class _BookingFormState extends State<BookingForm> {
       print('名前: $_name');
       print('メールアドレス: $_email');
       print('選択された日付: ${DateFormat('yyyy年MM月dd日').format(_selectedDate)}');
+      // フォームが有効な場合、Supabaseにデータを送信
+      _addReservation(_name, _email, _selectedDate);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
                 '予約が送信されました: 名前: $_name, メール: $_email, 日付: ${DateFormat('yyyy年MM月dd日').format(_selectedDate)}')),
       );
     }
+  }
+
+// 予約をSupabaseに送信する処理
+  Future<void> _addReservation(String name, String email, DateTime date) async {
+    final response = await supabaseClient.from('reservations').insert({
+      'name': name,
+      'date': DateFormat('yyyy-MM-dd').format(date),
+      'time': '12:00', // 時間を固定で'12:00'に設定
+      'count': 1,
+      'email': email,
+    });
+
+    print('response: $response');
   }
 
   Future<void> _selectDate(BuildContext context) async {
