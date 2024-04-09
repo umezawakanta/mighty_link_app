@@ -210,7 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
           : allItems.where((item) => item["requiresLogin"] != true).toList();
     }
 
-    Future<void> _navigateAndLogin(BuildContext context) async {
+    Future<void> navigateAndLogin(BuildContext context) async {
       final result = await Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
@@ -294,7 +294,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
 
-    List<BottomNavigationBarItem> _buildBottomNavigationBarItems() {
+    List<BottomNavigationBarItem> buildBottomNavigationBarItems() {
       var items = getNavItems();
       return items.map((item) {
         return BottomNavigationBarItem(
@@ -304,7 +304,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }).toList();
     }
 
-    List<NavigationRailDestination> _buildNavigationRailDestinations() {
+    List<NavigationRailDestination> buildNavigationRailDestinations() {
       var items = getNavItems();
       return items.map((item) {
         return NavigationRailDestination(
@@ -354,7 +354,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Expanded(child: mainArea),
                         SafeArea(
                           child: BottomNavigationBar(
-                            items: _buildBottomNavigationBarItems(),
+                            items: buildBottomNavigationBarItems(),
                             currentIndex: selectedIndex,
                             selectedItemColor: Colors.black, // 選択されたアイテムの色
                             unselectedItemColor: Colors.grey, // 選択されていないアイテムの色
@@ -379,7 +379,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 selectedIndex = value;
                               });
                             },
-                            destinations: _buildNavigationRailDestinations(),
+                            destinations: buildNavigationRailDestinations(),
                             selectedIconTheme:
                                 IconThemeData(color: Colors.black),
                             unselectedIconTheme:

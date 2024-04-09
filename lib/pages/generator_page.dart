@@ -17,7 +17,7 @@ class GeneratorPage extends StatelessWidget {
       icon = Icons.favorite_border;
     }
 
-    Widget _dialogBuilder(BuildContext context) {
+    Widget dialogBuilder(BuildContext context) {
       ThemeData localTheme = Theme.of(context);
 
       return SimpleDialog(
@@ -98,7 +98,7 @@ class GeneratorPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () => showDialog(
                     context: context,
-                    builder: (context) => _dialogBuilder(context)),
+                    builder: (context) => dialogBuilder(context)),
                 child: Text('Dialog'),
               ),
             ],
