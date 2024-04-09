@@ -80,7 +80,7 @@ class _BookingFormState extends State<BookingForm> {
         _eventsMap = eventsMap;
       });
     } else {
-      print('Error fetching reservations: ${response}');
+      print('Error fetching reservations: $response');
       throw response;
     }
   }
