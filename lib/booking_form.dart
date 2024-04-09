@@ -5,10 +5,10 @@ import 'package:table_calendar/table_calendar.dart'; // table_calendarパッケ�
 
 class BookingForm extends StatefulWidget {
   @override
-  _BookingFormState createState() => _BookingFormState();
+  BookingFormState createState() => BookingFormState();
 }
 
-class _BookingFormState extends State<BookingForm> {
+class BookingFormState extends State<BookingForm> {
   final _formKey = GlobalKey<FormState>();
   String _name = '';
   String _email = '';
