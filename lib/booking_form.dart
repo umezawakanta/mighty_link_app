@@ -12,6 +12,7 @@ class BookingFormState extends State<BookingForm> {
   final _formKey = GlobalKey<FormState>();
   String _name = '';
   String _email = '';
+  String _phoneNumber = ''; // 電話番号の状態を追加
   DateTime _selectedDate = DateTime.now(); // 日付選択のための状態変数
   TimeOfDay? _time; // 時間入力用の状態変数
   int _count = 1; // 人数入力用の状態変数
@@ -34,9 +35,10 @@ class BookingFormState extends State<BookingForm> {
       // 予約日を含めて送信します。
       print('名前: $_name');
       print('メールアドレス: $_email');
+      print('電話番号: $_phoneNumber');
       print('選択された日付: ${DateFormat('yyyy年MM月dd日').format(_selectedDate)}');
       // フォームが有効な場合、Supabaseにデータを送信
-      _addReservation(_name, _email, _selectedDate, _time, _count);
+      _addReservation(_name, _email, _phoneNumber, _selectedDate, _time, _count);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
@@ -46,7 +48,7 @@ class BookingFormState extends State<BookingForm> {
   }
 
 // 予約をSupabaseに送信する処理
-  Future<void> _addReservation(String name, String email, DateTime date,
+  Future<void> _addReservation(String name, String email, String phonenumber, DateTime date,
       TimeOfDay? time, int count) async {
     final response = await supabaseClient.from('reservations').insert({
       'name': name,
@@ -54,6 +56,7 @@ class BookingFormState extends State<BookingForm> {
       'time': time != null ? '${time.hour}:${time.minute}' : '未定',
       'count': count,
       'email': email,
+      'phonenumber': phonenumber,
     });
 
     print('response: $response');
@@ -150,8 +153,9 @@ class BookingFormState extends State<BookingForm> {
                 String name = event['name'] ?? '不明なイベント';
                 String time = event['time'] ?? '時間不明';
                 String count = event['count'].toString();
+                String phonenumber = event['phonenumber'] ?? '電話番号不明';
                 return ListTile(
-                  title: Text('$name 様'),
+                  title: Text('$name 様 電話番号: $phonenumber'),
                   subtitle: Text('時間: $time ~ / 人数: $count 名様'),
                 );
               }).toList(),
@@ -199,6 +203,18 @@ class BookingFormState extends State<BookingForm> {
                 return null;
               },
               onSaved: (value) => _email = value!,
+            ),
+            TextFormField(
+              decoration: InputDecoration(labelText: '電話番号'),
+              keyboardType: TextInputType.phone,
+              validator: (value) {
+                if (value!.isEmpty ||
+                    !RegExp(r'^[0-9+\(\)#\.\s\/ext-]+$').hasMatch(value)) {
+                  return '有効な電話番号を入力してください';
+                }
+                return null;
+              },
+              onSaved: (value) => _phoneNumber = value!,
             ),
             // 人数入力用のTextFormFieldを追加
             TextFormField(
