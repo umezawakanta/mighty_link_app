@@ -38,7 +38,8 @@ class BookingFormState extends State<BookingForm> {
       print('電話番号: $_phoneNumber');
       print('選択された日付: ${DateFormat('yyyy年MM月dd日').format(_selectedDate)}');
       // フォームが有効な場合、Supabaseにデータを送信
-      _addReservation(_name, _email, _phoneNumber, _selectedDate, _time, _count);
+      _addReservation(
+          _name, _email, _phoneNumber, _selectedDate, _time, _count);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text(
@@ -48,8 +49,8 @@ class BookingFormState extends State<BookingForm> {
   }
 
 // 予約をSupabaseに送信する処理
-  Future<void> _addReservation(String name, String email, String phonenumber, DateTime date,
-      TimeOfDay? time, int count) async {
+  Future<void> _addReservation(String name, String email, String phonenumber,
+      DateTime date, TimeOfDay? time, int count) async {
     final response = await supabaseClient.from('reservations').insert({
       'name': name,
       'date': DateFormat('yyyy-MM-dd').format(date),
@@ -184,58 +185,6 @@ class BookingFormState extends State<BookingForm> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            TextFormField(
-              decoration: InputDecoration(labelText: '名前'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return '名前を入力してください';
-                }
-                return null;
-              },
-              onSaved: (value) => _name = value!,
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: 'メールアドレス'),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'メールアドレスを入力してください';
-                }
-                return null;
-              },
-              onSaved: (value) => _email = value!,
-            ),
-            TextFormField(
-              decoration: InputDecoration(labelText: '電話番号'),
-              keyboardType: TextInputType.phone,
-              validator: (value) {
-                if (value!.isEmpty ||
-                    !RegExp(r'^[0-9+\(\)#\.\s\/ext-]+$').hasMatch(value)) {
-                  return '有効な電話番号を入力してください';
-                }
-                return null;
-              },
-              onSaved: (value) => _phoneNumber = value!,
-            ),
-            // 人数入力用のTextFormFieldを追加
-            TextFormField(
-              decoration: InputDecoration(labelText: '人数'),
-              keyboardType: TextInputType.number,
-              validator: (value) {
-                if (value == null ||
-                    value.isEmpty ||
-                    int.tryParse(value) == null) {
-                  return '正しい人数を入力してください';
-                }
-                return null;
-              },
-              onSaved: (value) => _count = int.parse(value!),
-            ),
-            // 時間選択用のボタンを追加
-            ElevatedButton(
-              onPressed: () => _selectTime(context),
-              child: Text(
-                  _time == null ? '時間を選択' : '時間: ${_time!.format(context)}'),
-            ),
             TableCalendar(
               firstDay: DateTime.utc(2010, 10, 16),
               lastDay: DateTime.utc(2030, 3, 14),
@@ -289,12 +238,81 @@ class BookingFormState extends State<BookingForm> {
                 }
               },
             ),
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: '名前',
+                prefixIcon: Icon(Icons.person), // 名前入力フィールドのアイコン
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return '名前を入力してください';
+                }
+                return null;
+              },
+              onSaved: (value) => _name = value!,
+            ),
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'メールアドレス',
+                prefixIcon: Icon(Icons.email), // メールアドレス入力フィールドのアイコン
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'メールアドレスを入力してください';
+                }
+                return null;
+              },
+              onSaved: (value) => _email = value!,
+            ),
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: '電話番号',
+                prefixIcon: Icon(Icons.phone), // 電話番号入力フィールドのアイコン
+              ),
+              keyboardType: TextInputType.phone,
+              validator: (value) {
+                if (value!.isEmpty ||
+                    !RegExp(r'^[0-9+\(\)#\.\s\/ext-]+$').hasMatch(value)) {
+                  return '有効な電話番号を入力してください';
+                }
+                return null;
+              },
+              onSaved: (value) => _phoneNumber = value!,
+            ),
+            // 人数入力用のTextFormFieldを追加
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: '人数',
+                prefixIcon: Icon(Icons.group), // 人数入力フィールドのアイコン
+              ),
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value == null ||
+                    value.isEmpty ||
+                    int.tryParse(value) == null) {
+                  return '正しい人数を入力してください';
+                }
+                return null;
+              },
+              onSaved: (value) => _count = int.parse(value!),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton(
+              child: ElevatedButton.icon(
                 onPressed: () => _selectDate(context),
-                child: Text(
+                icon: Icon(Icons.calendar_today), // 日付選択ボタンのアイコン
+                label: Text(
                     '日付を選択: ${DateFormat('yyyy年MM月dd日').format(_selectedDate)}'),
+              ),
+            ),
+            // 時間選択用のボタンを追加
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: ElevatedButton.icon(
+                onPressed: () => _selectTime(context),
+                icon: Icon(Icons.access_time), // 時間選択ボタンのアイコン
+                label: Text(
+                    _time == null ? '時間を選択' : '時間: ${_time!.format(context)}'),
               ),
             ),
             Padding(
