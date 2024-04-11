@@ -40,10 +40,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
     print('fetching user Roles data');
     final user = Supabase.instance.client.auth.currentUser;
     print('user: $user');
-    if (user != null) 
+    if (user != null) {
       final response =
           await Supabase.instance.client.from('user_roles').select();
-
       print('response: $response');
       if (response.isNotEmpty) {
         setState(() {
