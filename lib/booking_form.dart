@@ -40,11 +40,9 @@ class BookingFormState extends State<BookingForm> {
       // フォームが有効な場合、Supabaseにデータを送信
       _addReservation(
           _name, _email, _phoneNumber, _selectedDate, _time, _count);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                '予約が送信されました: 名前: $_name, メール: $_email, 日付: ${DateFormat('yyyy年MM月dd日').format(_selectedDate)}')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+              '予約が送信されました: 名前: $_name, メール: $_email, 電話番号: $_phoneNumber, 人数: $_count, 日付: ${DateFormat('yyyy年MM月dd日').format(_selectedDate)}, 時間: ${_time?.format(context) ?? '未定'}')));
     }
   }
 
