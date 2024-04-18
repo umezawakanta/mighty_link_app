@@ -40,7 +40,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
       if (response.isNotEmpty) {
         setState(() {
           userData = response;
+          // ユーザーデータが読み込まれた後にテキストフィールドを初期化
+          _usernameController.text = userData?['username'] ?? '';
+          _emailController.text = userData?['email'] ?? '';
         });
+        print('Update success: $response');
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Profile Updated Successfully!')));
       }
     }
   }
@@ -69,15 +75,17 @@ class _UserProfilePageState extends State<UserProfilePage> {
     }).eq('id', Supabase.instance.client.auth.currentUser!.id);
     if (response != null) {
       print('Update success: $response');
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile Updated Successfully!')));
+    } else {
+      print('Update success: response　is null');
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile Updated Successfully!')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // ユーザーデータが読み込まれた後にテキストフィールドを初期化
-    _usernameController.text = userData?['username'] ?? '';
-    _emailController.text = userData?['email'] ?? '';
-
     return Scaffold(
       appBar: AppBar(
         title: Text('User Profile'),
