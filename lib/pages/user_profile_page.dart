@@ -86,6 +86,17 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    // 画像を表示するWidget
+    Widget _buildAvatar() {
+      return userData!['avatar_url'] != null
+          ? Image.network(
+              userData!['avatar_url'],
+              width: 400,
+              height: 400,
+              fit: BoxFit.cover,
+            )
+          : SizedBox(); // avatar_urlがnullの場合は何も表示しない
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('User Profile'),
@@ -96,6 +107,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
               padding: EdgeInsets.all(16),
               child: ListView(
                 children: [
+                  _buildAvatar(), // ここに_buildAvatar()を追加
+                  SizedBox(height: 10),
                   Text('ID: ${userData!['id']}',
                       style: TextStyle(fontSize: 20)),
                   SizedBox(height: 10),
@@ -125,9 +138,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       style: TextStyle(fontSize: 20)),
                   SizedBox(height: 10),
                   Text('default_channel_id: ${userData!['default_channel_id']}',
-                      style: TextStyle(fontSize: 20)),
-                  SizedBox(height: 10),
-                  Text('avatar_url: ${userData!['avatar_url']}',
                       style: TextStyle(fontSize: 20)),
                   SizedBox(height: 10),
                   Text('peer_id: ${userData!['peer_id']}',
