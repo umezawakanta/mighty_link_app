@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -97,6 +98,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
             )
           : SizedBox(); // avatar_urlがnullの場合は何も表示しない
     }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('User Profile'),
@@ -130,6 +132,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     controller: _emailController,
                     decoration: InputDecoration(labelText: 'Email'),
                   ),
+                  SizedBox(height: 10),
+                  Text(
+                      '誕生日: ${DateFormat('MM/dd/yyyy').format(DateTime.parse(userData!['birthday']))}',
+                      style: TextStyle(fontSize: 20)),
                   SizedBox(height: 10),
                   Text('Age: ${userData!['age']}',
                       style: TextStyle(fontSize: 20)),
