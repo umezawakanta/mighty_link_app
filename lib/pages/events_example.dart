@@ -5,10 +5,10 @@ import '../utils.dart';
 
 class TableEventsExample extends StatefulWidget {
   @override
-  _TableEventsExampleState createState() => _TableEventsExampleState();
+  TableEventsExampleState createState() => TableEventsExampleState();
 }
 
-class _TableEventsExampleState extends State<TableEventsExample> {
+class TableEventsExampleState extends State<TableEventsExample> {
   late final ValueNotifier<List<Event>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode

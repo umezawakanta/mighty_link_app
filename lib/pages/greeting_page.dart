@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class GreetingPage extends StatefulWidget {
   @override
-  _GreetingPageState createState() => _GreetingPageState();
+  GreetingPageState createState() => GreetingPageState();
 }
 
-class _GreetingPageState extends State<GreetingPage> {
+class GreetingPageState extends State<GreetingPage> {
   final PageController _pageController = PageController();
   late Timer _timer;
 

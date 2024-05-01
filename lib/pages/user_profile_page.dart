@@ -85,6 +85,22 @@ class _UserProfilePageState extends State<UserProfilePage> {
     }
   }
 
+  String _calculateAge(String? birthdayString) {
+    if (birthdayString != null) {
+      DateTime birthday = DateTime.parse(birthdayString);
+      DateTime currentDate = DateTime.now();
+      int age = currentDate.year - birthday.year;
+      if (currentDate.month < birthday.month ||
+          (currentDate.month == birthday.month &&
+              currentDate.day < birthday.day)) {
+        age--;
+      }
+      return age.toString();
+    } else {
+      return 'N/A';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // 画像を表示するWidget
@@ -137,7 +153,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       '誕生日: ${DateFormat('MM/dd/yyyy').format(DateTime.parse(userData!['birthday']))}',
                       style: TextStyle(fontSize: 20)),
                   SizedBox(height: 10),
-                  Text('Age: ${userData!['age']}',
+                  Text('年齢: ${_calculateAge(userData!['birthday'])}',
                       style: TextStyle(fontSize: 20)),
                   SizedBox(height: 10),
                   Text('payedvacation: ${userData!['payedvacation']}',

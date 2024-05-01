@@ -8,10 +8,10 @@ import '../utils.dart';
 
 class TableComplexExample extends StatefulWidget {
   @override
-  _TableComplexExampleState createState() => _TableComplexExampleState();
+  TableComplexExampleState createState() => TableComplexExampleState();
 }
 
-class _TableComplexExampleState extends State<TableComplexExample> {
+class TableComplexExampleState extends State<TableComplexExample> {
   late final ValueNotifier<List<Event>> _selectedEvents;
   final ValueNotifier<DateTime> _focusedDay = ValueNotifier(DateTime.now());
   final Set<DateTime> _selectedDays = LinkedHashSet<DateTime>(

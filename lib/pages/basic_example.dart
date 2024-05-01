@@ -5,10 +5,10 @@ import '../utils.dart';
 
 class TableBasicsExample extends StatefulWidget {
   @override
-  _TableBasicsExampleState createState() => _TableBasicsExampleState();
+  TableBasicsExampleState createState() => TableBasicsExampleState();
 }
 
-class _TableBasicsExampleState extends State<TableBasicsExample> {
+class TableBasicsExampleState extends State<TableBasicsExample> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
