@@ -8,6 +8,8 @@ class BookingForm extends StatefulWidget {
   BookingFormState createState() => BookingFormState();
 }
 
+enum CalendarView { month, twoWeeks, week }
+
 class BookingFormState extends State<BookingForm> {
   final _formKey = GlobalKey<FormState>();
   String _name = '';
@@ -17,6 +19,7 @@ class BookingFormState extends State<BookingForm> {
   TimeOfDay? _time; // 時間入力用の状態変数
   int _count = 1; // 人数入力用の状態変数
   CalendarFormat _calendarFormat = CalendarFormat.month; // カレンダーの形式
+  CalendarView calendarView = CalendarView.month;
   // カレンダーイベントの状態
   Map<DateTime, List<dynamic>> _eventsMap = {};
 
@@ -184,10 +187,15 @@ class BookingFormState extends State<BookingForm> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             TableCalendar(
+              // カレンダーの設定
+              calendarFormat: calendarView == CalendarView.month
+                  ? CalendarFormat.month
+                  : calendarView == CalendarView.week
+                      ? CalendarFormat.week
+                      : CalendarFormat.twoWeeks,
               firstDay: DateTime.utc(2010, 10, 16),
               lastDay: DateTime.utc(2030, 3, 14),
               focusedDay: _selectedDate,
-              calendarFormat: _calendarFormat,
               calendarBuilders: CalendarBuilders(
                 markerBuilder: (context, date, events) {
                   if (events.isNotEmpty) {
@@ -234,6 +242,34 @@ class BookingFormState extends State<BookingForm> {
                     _calendarFormat = format; // カレンダーの形式を更新
                   });
                 }
+              },
+            ),
+            SegmentedButton<CalendarView>(
+              style: SegmentedButton.styleFrom(
+                backgroundColor: Colors.grey[200],
+                foregroundColor: Colors.red,
+                selectedForegroundColor: Colors.white,
+                selectedBackgroundColor: Colors.green,
+              ),
+              segments: const <ButtonSegment<CalendarView>>[
+                ButtonSegment<CalendarView>(
+                    value: CalendarView.month,
+                    label: Text('Month'),
+                    icon: Icon(Icons.calendar_view_month)),
+                ButtonSegment<CalendarView>(
+                    value: CalendarView.twoWeeks,
+                    label: Text('2 Weeks'),
+                    icon: Icon(Icons.calendar_view_week_sharp)),
+                ButtonSegment<CalendarView>(
+                    value: CalendarView.week,
+                    label: Text('Week'),
+                    icon: Icon(Icons.calendar_view_week)),
+              ],
+              selected: <CalendarView>{calendarView},
+              onSelectionChanged: (Set<CalendarView> newSelection) {
+                setState(() {
+                  calendarView = newSelection.first;
+                });
               },
             ),
             TextFormField(
