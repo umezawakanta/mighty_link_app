@@ -22,6 +22,7 @@ class UserProfilePageState extends State<UserProfilePage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   SexLabel? selectedSex;
+  final ScrollController _scrollController = ScrollController(); // 追加
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class UserProfilePageState extends State<UserProfilePage> {
   void dispose() {
     _usernameController.dispose();
     _emailController.dispose();
+    _scrollController.dispose(); // 追加
     super.dispose();
   }
 
@@ -149,6 +151,7 @@ class UserProfilePageState extends State<UserProfilePage> {
           : Padding(
               padding: EdgeInsets.all(16),
               child: ListView(
+                controller: _scrollController, // 追加
                 children: [
                   _buildAvatar(), // ここに_buildAvatar()を追加
                   SizedBox(height: 10),
@@ -233,6 +236,14 @@ class UserProfilePageState extends State<UserProfilePage> {
                 ],
               ),
             ),
+      floatingActionButton: FloatingActionButton(
+        // 追加
+        onPressed: () {
+          _scrollController.animateTo(0,
+              duration: Duration(seconds: 1), curve: Curves.easeInOut);
+        },
+        child: Icon(Icons.arrow_upward),
+      ),
     );
   }
 }
