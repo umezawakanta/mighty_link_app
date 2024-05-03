@@ -7,10 +7,10 @@ import '../utils.dart';
 
 class TableMultiExample extends StatefulWidget {
   @override
-  _TableMultiExampleState createState() => _TableMultiExampleState();
+  TableMultiExampleState createState() => TableMultiExampleState();
 }
 
-class _TableMultiExampleState extends State<TableMultiExample> {
+class TableMultiExampleState extends State<TableMultiExample> {
   final ValueNotifier<List<Event>> _selectedEvents = ValueNotifier([]);
 
   // Using a `LinkedHashSet` is recommended due to equality comparison override

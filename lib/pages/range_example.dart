@@ -5,10 +5,10 @@ import '../utils.dart';
 
 class TableRangeExample extends StatefulWidget {
   @override
-  _TableRangeExampleState createState() => _TableRangeExampleState();
+  TableRangeExampleState createState() => TableRangeExampleState();
 }
 
-class _TableRangeExampleState extends State<TableRangeExample> {
+class TableRangeExampleState extends State<TableRangeExample> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOn; // Can be toggled on/off by longpressing a date

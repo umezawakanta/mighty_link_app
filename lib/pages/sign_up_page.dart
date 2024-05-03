@@ -87,17 +87,24 @@ class SignUpPageState extends State<SignUpPage> {
       print(response.toString());
       // Check if registration was successful
       if (response.user != null) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Registered successfully!')));
+        if (mounted) {
+          // mountedチェックを追加
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Registered successfully!')));
+        }
       } else {
         // Handle the case where the user is null
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Failed to register')));
+        if (mounted) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Failed to register')));
+        }
       }
     } catch (e) {
       // Catch any kind of exception here
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.toString())));
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
     }
   }
 

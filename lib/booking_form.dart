@@ -330,24 +330,31 @@ class BookingFormState extends State<BookingForm> {
               },
               onSaved: (value) => _count = int.parse(value!),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton.icon(
-                onPressed: () => _selectDate(context),
-                icon: Icon(Icons.calendar_today), // 日付選択ボタンのアイコン
-                label: Text(
-                    '日付を選択: ${DateFormat('yyyy年MM月dd日').format(_selectedDate)}'),
-              ),
-            ),
-            // 時間選択用のボタンを追加
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton.icon(
-                onPressed: () => _selectTime(context),
-                icon: Icon(Icons.access_time), // 時間選択ボタンのアイコン
-                label: Text(
-                    _time == null ? '時間を選択' : '時間: ${_time!.format(context)}'),
-              ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: ElevatedButton.icon(
+                    onPressed: () => _selectDate(context),
+                    icon: Icon(Icons.calendar_today), // 日付選択ボタンのアイコン
+                    label: Text(
+                        '日付を選択: ${DateFormat('yyyy年MM月dd日').format(_selectedDate)}'),
+                  ),
+                ),
+                SizedBox(width: 16.0), // 間隔を追加（日付選択ボタンと時間選択ボタンの間隔を調整するための間隔を追加
+                // 時間選択用のボタンを追加
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: ElevatedButton.icon(
+                    onPressed: () => _selectTime(context),
+                    icon: Icon(Icons.access_time), // 時間選択ボタンのアイコン
+                    label: Text(_time == null
+                        ? '時間を選択'
+                        : '時間: ${_time!.format(context)}'),
+                  ),
+                ),
+              ],
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),

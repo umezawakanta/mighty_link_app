@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:mighty_link_app/funcy_button.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserProfilePage extends StatefulWidget {
@@ -60,8 +61,10 @@ class UserProfilePageState extends State<UserProfilePage> {
           selectedSex = _getSexLabel(userData?['sex']);
         });
         print('Update success: $response');
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Profile Updated Successfully!')));
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Profile Updated Successfully!')));
+        }
       }
     }
   }
@@ -102,12 +105,16 @@ class UserProfilePageState extends State<UserProfilePage> {
     }).eq('id', Supabase.instance.client.auth.currentUser!.id);
     if (response != null) {
       print('Update success: $response');
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Profile Updated Successfully!')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Profile Updated Successfully!')));
+      }
     } else {
       print('Update success: response　is null');
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Profile Updated Successfully!')));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Profile Updated Successfully!')));
+      }
     }
   }
 
@@ -131,7 +138,7 @@ class UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     final TextEditingController colorController = TextEditingController();
     // 画像を表示するWidget
-    Widget _buildAvatar() {
+    Widget buildAvatar() {
       return userData!['avatar_url'] != null
           ? Image.network(
               userData!['avatar_url'],
@@ -153,7 +160,7 @@ class UserProfilePageState extends State<UserProfilePage> {
               child: ListView(
                 controller: _scrollController, // 追加
                 children: [
-                  _buildAvatar(), // ここに_buildAvatar()を追加
+                  buildAvatar(), // ここに_buildAvatar()を追加
                   SizedBox(height: 10),
                   Text('ID: ${userData!['id']}',
                       style: TextStyle(fontSize: 20)),
@@ -236,13 +243,12 @@ class UserProfilePageState extends State<UserProfilePage> {
                 ],
               ),
             ),
-      floatingActionButton: FloatingActionButton(
-        // 追加
+      floatingActionButton: FuncyButton(
+        text: 'Scroll to Top',
         onPressed: () {
           _scrollController.animateTo(0,
               duration: Duration(seconds: 1), curve: Curves.easeInOut);
         },
-        child: Icon(Icons.arrow_upward),
       ),
     );
   }

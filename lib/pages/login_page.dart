@@ -80,19 +80,26 @@ class LoginPageState extends State<LoginPage> {
           .signInWithPassword(email: email, password: password);
       if (response.session != null) {
         // ログイン成功
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Logged in successfully!')));
-        // 成功時の画面に戻る
-        Navigator.pop(context, true); // `true` はログインが成功したことを意味します
+        if (mounted) {
+          // mountedチェックを追加
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Logged in successfully!')));
+          // 成功時の画面に戻る
+          Navigator.pop(context, true); // `true` はログインが成功したことを意味します
+        }
       } else {
         // ログイン失敗
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Login failed')));
+        if (mounted) { // mountedチェックを追加
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('Login failed')));
+        }
       }
     } catch (e) {
       print('Exception during login: $e');
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Login exception: $e')));
+      if (mounted) { // mountedチェックを追加
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Login exception: $e')));
+      }
     }
   }
 
