@@ -9,10 +9,10 @@ class ScrollingText extends StatefulWidget {
   const ScrollingText({super.key, required this.text, this.style});
 
   @override
-  _ScrollingTextState createState() => _ScrollingTextState();
+  ScrollingTextState createState() => ScrollingTextState();
 }
 
-class _ScrollingTextState extends State<ScrollingText> {
+class ScrollingTextState extends State<ScrollingText> {
   ScrollController _scrollController = ScrollController();
   Timer? _timer;
 

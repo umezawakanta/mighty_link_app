@@ -4,14 +4,24 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserProfilePage extends StatefulWidget {
   @override
-  _UserProfilePageState createState() => _UserProfilePageState();
+  UserProfilePageState createState() => UserProfilePageState();
 }
 
-class _UserProfilePageState extends State<UserProfilePage> {
+// DropdownMenuEntry labels and values for the first dropdown menu.
+enum SexLabel {
+  man('男性'),
+  woman('女性');
+
+  const SexLabel(this.label);
+  final String label;
+}
+
+class UserProfilePageState extends State<UserProfilePage> {
   Map<String, dynamic>? userData;
   List<Map<String, dynamic>>? userRoles;
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  SexLabel? selectedSex;
 
   @override
   void initState() {
@@ -44,11 +54,24 @@ class _UserProfilePageState extends State<UserProfilePage> {
           // ユーザーデータが読み込まれた後にテキストフィールドを初期化
           _usernameController.text = userData?['username'] ?? '';
           _emailController.text = userData?['email'] ?? '';
+          // 性別を初期化
+          selectedSex = _getSexLabel(userData?['sex']);
         });
         print('Update success: $response');
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Profile Updated Successfully!')));
       }
+    }
+  }
+
+  SexLabel? _getSexLabel(String? sexLabel) {
+    switch (sexLabel) {
+      case '男性':
+        return SexLabel.man;
+      case '女性':
+        return SexLabel.woman;
+      default:
+        return null;
     }
   }
 
@@ -72,6 +95,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     final response = await Supabase.instance.client.from('users').update({
       'username': _usernameController.text,
       'email': _emailController.text,
+      'sex': selectedSex?.label, // 新しいフィールドを更新
       // 他のフィールドもここに追加
     }).eq('id', Supabase.instance.client.auth.currentUser!.id);
     if (response != null) {
@@ -103,6 +127,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController colorController = TextEditingController();
     // 画像を表示するWidget
     Widget _buildAvatar() {
       return userData!['avatar_url'] != null
@@ -156,7 +181,31 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   Text('年齢: ${_calculateAge(userData!['birthday'])}',
                       style: TextStyle(fontSize: 20)),
                   SizedBox(height: 10),
-                  Text('payedvacation: ${userData!['payedvacation']}',
+                  DropdownMenu<SexLabel>(
+                    initialSelection: selectedSex ?? SexLabel.man, // 初期選択項目を設定
+                    controller: colorController,
+                    // requestFocusOnTap is enabled/disabled by platforms when it is null.
+                    // On mobile platforms, this is false by default. Setting this to true will
+                    // trigger focus request on the text field and virtual keyboard will appear
+                    // afterward. On desktop platforms however, this defaults to true.
+                    requestFocusOnTap: true,
+                    label: const Text('Sex'),
+                    onSelected: (SexLabel? sex) {
+                      setState(() {
+                        selectedSex = sex;
+                      });
+                    },
+                    dropdownMenuEntries: SexLabel.values
+                        .map<DropdownMenuEntry<SexLabel>>((SexLabel sex) {
+                      return DropdownMenuEntry<SexLabel>(
+                        value: sex,
+                        label: sex.label,
+                        enabled: true,
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 10),
+                  Text('有給休暇: ${userData!['payedvacation']}',
                       style: TextStyle(fontSize: 20)),
                   SizedBox(height: 10),
                   Text('default_channel_id: ${userData!['default_channel_id']}',
