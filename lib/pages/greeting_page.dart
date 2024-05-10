@@ -44,7 +44,8 @@ class GreetingPageState extends State<GreetingPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Welcome to the Greeting Page!', style: TextStyle(fontSize: 24)),
+            Text('Welcome to the Greeting Page!',
+                style: TextStyle(fontSize: 24)),
             SizedBox(height: 20), // 余白を追加
             Expanded(
               child: PageView(

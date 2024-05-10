@@ -9,6 +9,7 @@ import 'package:mighty_link_app/pages/login_page.dart';
 import 'package:mighty_link_app/pages/search_page.dart';
 import 'package:mighty_link_app/pages/sign_up_page.dart';
 import 'package:mighty_link_app/pages/site_map.dart';
+import 'package:mighty_link_app/pages/typography_screen.dart';
 import 'package:mighty_link_app/pages/user_profile_page.dart';
 import 'package:mighty_link_app/pages/weekly_forecast_list.dart';
 import 'package:mighty_link_app/scrolling_text.dart';
@@ -187,6 +188,13 @@ class _MyHomePageState extends State<MyHomePage> {
           "icon": Icons.calendar_today,
           "label": "Flutter Calendar Carousel",
           "page": FlutterCalendarCarousel(),
+          "requiresLogin": true,
+          "requiresDeveloperRole": true
+        },
+        {
+          "icon": Icons.text_snippet_outlined,
+          "label": "Typography",
+          "page": TypographyScreen(),
           "requiresLogin": true,
           "requiresDeveloperRole": true
         },
