@@ -140,11 +140,13 @@ class UserProfilePageState extends State<UserProfilePage> {
     // 画像を表示するWidget
     Widget buildAvatar() {
       return userData!['avatar_url'] != null
-          ? Image.network(
-              userData!['avatar_url'],
-              width: 400,
-              height: 400,
-              fit: BoxFit.cover,
+          ? Align(
+              alignment: Alignment.centerLeft,
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(userData!['avatar_url']),
+                radius: 100,
+                backgroundColor: Colors.grey[200],
+              ),
             )
           : SizedBox(); // avatar_urlがnullの場合は何も表示しない
     }

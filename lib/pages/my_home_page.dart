@@ -251,7 +251,10 @@ class _MyHomePageState extends State<MyHomePage> {
             foregroundColor: Colors.white,
             backgroundColor: Colors.teal[700], // ボタンの背景色
           ),
-          child: Text('会員登録（無料）'),
+          child: Tooltip(
+            message: '会員登録をして特典を得る', // ここにツールチップのテキストを設定
+            child: Text('会員登録（無料）'),
+          ),
         ),
       ]);
     } else {
