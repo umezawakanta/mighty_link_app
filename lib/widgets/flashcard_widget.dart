@@ -15,28 +15,30 @@ class FlashcardWidget extends StatelessWidget {
       controller: controller,
       rotateSide: RotateSide.left,
       axis: FlipAxis.horizontal,
-      onTapFlipping: true,  // ここを追加
+      onTapFlipping: true,
       frontWidget: Card(
+        color: Colors.blueAccent, // 表の色を青に設定
         elevation: 4,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
               flashcard.question,
-              style: TextStyle(fontSize: 24),
+              style: TextStyle(fontSize: 24, color: Colors.white), // テキストの色を白に設定
               textAlign: TextAlign.center,
             ),
           ),
         ),
       ),
       backWidget: Card(
+        color: Colors.greenAccent, // 裏の色を緑に設定
         elevation: 4,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
               flashcard.answer,
-              style: TextStyle(fontSize: 24),
+              style: TextStyle(fontSize: 24, color: Colors.white), // テキストの色を白に設定
               textAlign: TextAlign.center,
             ),
           ),
