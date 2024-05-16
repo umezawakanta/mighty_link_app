@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:mighty_link_app/screens/flashcard_screen.dart';
+import 'package:mighty_link_app/screens/subgenre_screen.dart';
 
 class GenreScreen extends StatelessWidget {
-  final List<String> genres = ['Flutter', 'Dart', 'Firebase', 'Supabase', 'AWS', 'LPI'];
+  final Map<String, List<String>> genresWithSubgenres = {
+    'Flutter': ['Basics', 'Widgets', 'State Management'],
+    'Dart': ['Syntax', 'Asynchronous', 'Collections'],
+    'Firebase': ['Authentication', 'Firestore', 'Storage'],
+    'Supabase': ['Database', 'Auth', 'Storage'],
+    'AWS': ['EC2', 'S3', 'Lambda'],
+    'LPI': ['Linux Basics', 'System Administration', 'Networking'],
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -11,15 +18,19 @@ class GenreScreen extends StatelessWidget {
         title: Text('Select Genre'),
       ),
       body: ListView.builder(
-        itemCount: genres.length,
+        itemCount: genresWithSubgenres.keys.length,
         itemBuilder: (context, index) {
+          String genre = genresWithSubgenres.keys.elementAt(index);
           return ListTile(
-            title: Text(genres[index]),
+            title: Text(genre),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => FlashcardScreen(genre: genres[index]),
+                  builder: (context) => SubgenreScreen(
+                    genre: genre,
+                    subgenres: genresWithSubgenres[genre]!,
+                  ),
                 ),
               );
             },

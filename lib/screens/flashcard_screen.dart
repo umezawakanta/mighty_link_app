@@ -5,8 +5,9 @@ import 'package:mighty_link_app/widgets/flashcard_widget.dart';
 
 class FlashcardScreen extends StatefulWidget {
   final String genre;
+  final String subgenre;
 
-  FlashcardScreen({required this.genre});
+  FlashcardScreen({required this.genre, required this.subgenre});
 
   @override
   FlashcardScreenState createState() => FlashcardScreenState();
@@ -27,8 +28,9 @@ class FlashcardScreenState extends State<FlashcardScreen> {
     final response = await supabase
         .from('flashcards')
         .select()
-        .eq('genre', widget.genre);
-
+        .eq('genre', widget.genre)
+        .eq('subgenre', widget.subgenre);
+    
     final data = response as List<dynamic>;
 
     setState(() {
@@ -46,7 +48,7 @@ class FlashcardScreenState extends State<FlashcardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FlashCard Quiz: ${widget.genre}'),
+        title: Text('FlashCard Quiz: ${widget.genre} - ${widget.subgenre}'),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
