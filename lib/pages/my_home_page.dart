@@ -13,6 +13,7 @@ import 'package:mighty_link_app/pages/typography_screen.dart';
 import 'package:mighty_link_app/pages/user_profile_page.dart';
 import 'package:mighty_link_app/pages/weekly_forecast_list.dart';
 import 'package:mighty_link_app/screens/flashcard_screen.dart';
+import 'package:mighty_link_app/screens/genre_screen.dart';
 import 'package:mighty_link_app/scrolling_text.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -201,8 +202,8 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         {
           "icon": Icons.quiz_outlined,
-          "label": "Flashcard Quiz",
-          "page": FlashcardScreen(),
+          "label": "Flashcardクイズ",
+          "page": GenreScreen(),
           "requiresLogin": true,
           "requiresDeveloperRole": true
         },

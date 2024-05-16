@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:mighty_link_app/models/flashcard.dart';
 import 'package:mighty_link_app/widgets/flashcard_widget.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FlashcardScreen extends StatefulWidget {
+  final String genre;
+
+  FlashcardScreen({required this.genre});
+
   @override
   FlashcardScreenState createState() => FlashcardScreenState();
 }
@@ -20,7 +24,11 @@ class FlashcardScreenState extends State<FlashcardScreen> {
   }
 
   Future<void> fetchFlashcards() async {
-    final response = await supabase.from('flashcards').select();
+    final response = await supabase
+        .from('flashcards')
+        .select()
+        .eq('genre', widget.genre);
+
     final data = response as List<dynamic>;
 
     setState(() {
@@ -32,13 +40,13 @@ class FlashcardScreenState extends State<FlashcardScreen> {
       }).toList();
       isLoading = false;
     });
-  }
+    }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FlashCard Quiz'),
+        title: Text('FlashCard Quiz: ${widget.genre}'),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
