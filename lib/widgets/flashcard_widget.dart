@@ -27,10 +27,26 @@ class _FlashcardWidgetState extends State<FlashcardWidget> {
       widget.flashcard.isFavorite = !widget.flashcard.isFavorite;
     });
 
-    await supabase
-        .from('flashcards')
-        .update({'is_favorite': widget.flashcard.isFavorite})
-        .eq('question', widget.flashcard.question);
+    // Log the value of widget.flashcard.isFavorite
+    print("widget.flashcard.isFavorite: ${widget.flashcard.isFavorite}");
+
+    try {
+      final response = await supabase
+          .from('flashcards')
+          .update({'is_favorite': widget.flashcard.isFavorite})
+          .eq('question', widget.flashcard.question)
+          .select();
+
+      // Check the response to see if the update was successful
+      if (response.isEmpty) {
+        print('Error: Update failed or no data returned');
+      } else {
+        print('Update successful: $response');
+      }
+    } catch (e) {
+      // Handle error
+      print('An error occurred: $e');
+    }
   }
 
   @override
