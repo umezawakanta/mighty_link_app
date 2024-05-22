@@ -1,44 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_flip_card/flutter_flip_card.dart';
 import 'package:mighty_link_app/models/flashcard.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class FlashcardWidget extends StatelessWidget {
+class FlashcardWidget extends StatefulWidget {
   final Flashcard flashcard;
 
   FlashcardWidget({required this.flashcard});
 
   @override
-  Widget build(BuildContext context) {
-    final FlipCardController controller = FlipCardController();
+  _FlashcardWidgetState createState() => _FlashcardWidgetState();
+}
 
+class _FlashcardWidgetState extends State<FlashcardWidget> {
+  final SupabaseClient supabase = Supabase.instance.client;
+  late FlipCardController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = FlipCardController();
+  }
+
+  Future<void> toggleFavorite() async {
+    setState(() {
+      widget.flashcard.isFavorite = !widget.flashcard.isFavorite;
+    });
+
+    await supabase
+        .from('flashcards')
+        .update({'is_favorite': widget.flashcard.isFavorite})
+        .eq('question', widget.flashcard.question);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return FlipCard(
-      controller: controller,
+      controller: _controller,
       rotateSide: RotateSide.left,
       axis: FlipAxis.horizontal,
       onTapFlipping: true,
       frontWidget: Card(
-        color: Colors.blueAccent, // 表の色を青に設定
         elevation: 4,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              flashcard.question,
-              style: TextStyle(fontSize: 24, color: Colors.white), // テキストの色を白に設定
-              textAlign: TextAlign.center,
+        child: Stack(
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  widget.flashcard.question,
+                  style: TextStyle(fontSize: 24),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             ),
-          ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: IconButton(
+                icon: Icon(
+                  widget.flashcard.isFavorite ? Icons.star : Icons.star_border,
+                  color: widget.flashcard.isFavorite ? Colors.yellow : null,
+                ),
+                onPressed: toggleFavorite,
+              ),
+            ),
+          ],
         ),
       ),
       backWidget: Card(
-        color: Colors.greenAccent, // 裏の色を緑に設定
         elevation: 4,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              flashcard.answer,
-              style: TextStyle(fontSize: 24, color: Colors.white), // テキストの色を白に設定
+              widget.flashcard.answer,
+              style: TextStyle(fontSize: 24),
               textAlign: TextAlign.center,
             ),
           ),

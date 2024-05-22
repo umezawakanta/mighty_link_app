@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:mighty_link_app/screens/level_screen.dart';
+import 'package:mighty_link_app/screens/flashcard_screen.dart';
 
-class SubgenreScreen extends StatelessWidget {
+class LevelScreen extends StatelessWidget {
   final String genre;
-  final List<String> subgenres;
+  final String subgenre;
 
-  SubgenreScreen({required this.genre, required this.subgenres});
+  LevelScreen({required this.genre, required this.subgenre});
+
+  final List<int> levels = [1, 2, 3];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select Subgenre'),
+        title: Text('Select Level'),
       ),
       body: ListView.builder(
-        itemCount: subgenres.length,
+        itemCount: levels.length,
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(subgenres[index]),
+            title: Text('Level ${levels[index]}'),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => LevelScreen(
+                  builder: (context) => FlashcardScreen(
                     genre: genre,
-                    subgenre: subgenres[index],
+                    subgenre: subgenre,
+                    level: levels[index],
                   ),
                 ),
               );
