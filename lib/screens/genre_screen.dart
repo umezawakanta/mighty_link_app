@@ -17,25 +17,48 @@ class GenreScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Select Genre'),
       ),
-      body: ListView.builder(
-        itemCount: genresWithSubgenres.keys.length,
-        itemBuilder: (context, index) {
-          String genre = genresWithSubgenres.keys.elementAt(index);
-          return ListTile(
-            title: Text(genre),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SubgenreScreen(
-                    genre: genre,
-                    subgenres: genresWithSubgenres[genre]!,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue, Colors.purple],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: ListView.builder(
+          itemCount: genresWithSubgenres.keys.length,
+          itemBuilder: (context, index) {
+            String genre = genresWithSubgenres.keys.elementAt(index);
+            return Card(
+              color: Colors.black87, // Optional: change card background color
+              elevation: 4,
+              child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SubgenreScreen(
+                        genre: genre,
+                        subgenres: genresWithSubgenres[genre]!,
+                      ),
+                    ),
+                  );
+                },
+                child: ListTile(
+                  leading: Icon(Icons.category, color: Colors.white), // Ensure icon color is also visible
+                  title: Text(
+                    genre,
+                    style: TextStyle(
+                      color: Colors.white, // Change text color to white for better contrast
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              );
-            },
-          );
-        },
+              ),
+            );
+          },
+        ),
       ),
     );
   }
