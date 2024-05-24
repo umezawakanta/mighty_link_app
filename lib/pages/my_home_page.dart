@@ -162,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       child: Image.network(
-                        'https://picsum.photos/200/200?random=1',
+                        '<https://picsum.photos/200/200?random=1>',
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -339,7 +339,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // The container for the current page, with its background color
             // and subtle switching animation.
             var mainArea = ColoredBox(
-              color: colorScheme.surfaceVariant,
+              color: colorScheme.surfaceContainerHighest, // Updated here
               child: AnimatedSwitcher(
                 duration: Duration(milliseconds: 200),
                 child: page,
