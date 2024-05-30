@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:mighty_link_app/models/flashcard.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class FlashcardQuizWidget extends StatefulWidget {
   final Flashcard flashcard;
+  final String userId; // ユーザーIDを追加
 
-  FlashcardQuizWidget({required this.flashcard});
+  FlashcardQuizWidget({required this.flashcard, required this.userId});
 
   @override
-  _FlashcardQuizWidgetState createState() => _FlashcardQuizWidgetState();
+  FlashcardQuizWidgetState createState() => FlashcardQuizWidgetState();
 }
 
-class _FlashcardQuizWidgetState extends State<FlashcardQuizWidget> {
+class FlashcardQuizWidgetState extends State<FlashcardQuizWidget> {
   String? selectedOption;
 
   void _showResultDialog(bool isCorrect) {
@@ -35,9 +37,20 @@ class _FlashcardQuizWidgetState extends State<FlashcardQuizWidget> {
     );
   }
 
+  Future<void> _saveQuizResult(bool isCorrect) async {
+    await Supabase.instance.client.from('quiz_results').insert({
+      'user_id': widget.userId,
+      'flashcard_id': widget.flashcard.id, // フラッシュカードIDを使用
+      'is_correct': isCorrect,
+    });
+
+    print('Quiz result saved successfully');
+  }
+
   @override
   Widget build(BuildContext context) {
-    print('Rendering FlashcardQuizWidget: ${widget.flashcard}'); // Debug message
+    print(
+        'Rendering FlashcardQuizWidget: ${widget.flashcard}'); // Debug message
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -54,11 +67,13 @@ class _FlashcardQuizWidgetState extends State<FlashcardQuizWidget> {
                   leading: Radio<String>(
                     value: option,
                     groupValue: selectedOption,
-                    onChanged: (value) {
+                    onChanged: (value) async {
                       setState(() {
                         selectedOption = value;
                       });
-                      _showResultDialog(value == widget.flashcard.answer);
+                      final isCorrect = value == widget.flashcard.answer;
+                      await _saveQuizResult(isCorrect);
+                      _showResultDialog(isCorrect);
                       print('Selected option: $value'); // Debug message
                     },
                   ),

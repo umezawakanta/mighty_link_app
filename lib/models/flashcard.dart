@@ -1,4 +1,5 @@
 class Flashcard {
+  final int id; // IDフィールドを追加
   final String question;
   final String answer;
   final List<String> options;
@@ -6,6 +7,7 @@ class Flashcard {
   final int level;
 
   Flashcard({
+    required this.id, // コンストラクタにIDフィールドを追加
     required this.question,
     required this.answer,
     required this.options,
@@ -15,6 +17,7 @@ class Flashcard {
 
   factory Flashcard.fromMap(Map<String, dynamic> map) {
     return Flashcard(
+      id: map['id'], // IDフィールドをマッピング
       question: map['question'] ?? '',
       answer: map['answer'] ?? '',
       options: map['options'] != null ? List<String>.from(map['options']) : [],
@@ -25,6 +28,6 @@ class Flashcard {
 
   @override
   String toString() {
-    return 'Flashcard(question: $question, answer: $answer, options: $options, isFavorite: $isFavorite, level: $level)';
+    return 'Flashcard(id: $id, question: $question, answer: $answer, options: $options, isFavorite: $isFavorite, level: $level)';
   }
 }

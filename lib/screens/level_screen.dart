@@ -4,8 +4,12 @@ import 'package:mighty_link_app/screens/flashcard_screen.dart';
 class LevelScreen extends StatelessWidget {
   final String genre;
   final String subgenre;
+  final String userId; // ユーザーIDを追加
 
-  LevelScreen({required this.genre, required this.subgenre});
+  LevelScreen(
+      {required this.genre,
+      required this.subgenre,
+      required this.userId}); // コンストラクタを修正
 
   final List<int> levels = [1, 2, 3];
 
@@ -28,6 +32,7 @@ class LevelScreen extends StatelessWidget {
                     genre: genre,
                     subgenre: subgenre,
                     level: levels[index],
+                    userId: userId, // ユーザーIDを渡す
                   ),
                 ),
               );

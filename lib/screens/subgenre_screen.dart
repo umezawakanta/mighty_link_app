@@ -4,8 +4,12 @@ import 'package:mighty_link_app/screens/level_screen.dart';
 class SubgenreScreen extends StatelessWidget {
   final String genre;
   final List<String> subgenres;
+  final String userId; // ユーザーIDを追加
 
-  SubgenreScreen({required this.genre, required this.subgenres});
+  SubgenreScreen(
+      {required this.genre,
+      required this.subgenres,
+      required this.userId}); // コンストラクタを修正
 
   @override
   Widget build(BuildContext context) {
@@ -36,16 +40,19 @@ class SubgenreScreen extends StatelessWidget {
                       builder: (context) => LevelScreen(
                         genre: genre,
                         subgenre: subgenre,
+                        userId: userId, // ユーザーIDを渡す
                       ),
                     ),
                   );
                 },
                 child: ListTile(
-                  leading: Icon(Icons.subdirectory_arrow_right, color: Colors.white), // Ensure icon color is also visible
+                  leading: Icon(Icons.subdirectory_arrow_right,
+                      color: Colors.white), // Ensure icon color is also visible
                   title: Text(
                     subgenre,
                     style: TextStyle(
-                      color: Colors.white, // Change text color to white for better contrast
+                      color: Colors
+                          .white, // Change text color to white for better contrast
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

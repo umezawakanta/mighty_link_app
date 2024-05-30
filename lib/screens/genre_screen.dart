@@ -11,6 +11,10 @@ class GenreScreen extends StatelessWidget {
     'LPI': ['Linux Basics', 'System Administration', 'Networking'],
   };
 
+  final String userId; // ユーザーIDを追加
+
+  GenreScreen({required this.userId}); // コンストラクタを修正
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,16 +44,19 @@ class GenreScreen extends StatelessWidget {
                       builder: (context) => SubgenreScreen(
                         genre: genre,
                         subgenres: genresWithSubgenres[genre]!,
+                        userId: userId, // ユーザーIDを渡す
                       ),
                     ),
                   );
                 },
                 child: ListTile(
-                  leading: Icon(Icons.category, color: Colors.white), // Ensure icon color is also visible
+                  leading: Icon(Icons.category,
+                      color: Colors.white), // Ensure icon color is also visible
                   title: Text(
                     genre,
                     style: TextStyle(
-                      color: Colors.white, // Change text color to white for better contrast
+                      color: Colors
+                          .white, // Change text color to white for better contrast
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

@@ -202,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
         {
           "icon": Icons.quiz_outlined,
           "label": "Flashcardクイズ",
-          "page": GenreScreen(),
+          "page": GenreScreen(userId: session!.user.id), // userIdを渡す
           "requiresLogin": true,
           "requiresDeveloperRole": true
         },

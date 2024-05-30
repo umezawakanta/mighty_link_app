@@ -7,9 +7,13 @@ class FlashcardScreen extends StatefulWidget {
   final String genre;
   final String subgenre;
   final int level;
+  final String userId; // ユーザーIDを追加
 
   FlashcardScreen(
-      {required this.genre, required this.subgenre, required this.level});
+      {required this.genre,
+      required this.subgenre,
+      required this.level,
+      required this.userId});
 
   @override
   FlashcardScreenState createState() => FlashcardScreenState();
@@ -20,17 +24,21 @@ class FlashcardScreenState extends State<FlashcardScreen> {
   List<Flashcard> flashcards = [];
   bool isLoading = true;
   bool showFavoritesOnly = false;
+  int totalAnswers = 0;
+  int correctAnswers = 0;
+  int incorrectAnswers = 0;
 
   @override
   void initState() {
     super.initState();
     fetchFlashcards();
+    fetchQuizStats();
   }
 
   Future<void> fetchFlashcards() async {
     final response = await supabase
         .from('flashcards')
-        .select('question, answer, options, is_favorite, level')
+        .select('id, question, answer, options, is_favorite, level')
         .eq('genre', widget.genre)
         .eq('subgenre', widget.subgenre)
         .eq('level', widget.level);
@@ -58,6 +66,21 @@ class FlashcardScreenState extends State<FlashcardScreen> {
     });
   }
 
+  Future<void> fetchQuizStats() async {
+    final response = await supabase
+        .from('quiz_results')
+        .select('is_correct')
+        .eq('user_id', widget.userId);
+
+    final data = response as List<dynamic>;
+    totalAnswers = data.length;
+    correctAnswers =
+        data.where((result) => result['is_correct'] == true).length;
+    incorrectAnswers = totalAnswers - correctAnswers;
+
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final displayedFlashcards = showFavoritesOnly
@@ -83,23 +106,38 @@ class FlashcardScreenState extends State<FlashcardScreen> {
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : displayedFlashcards.isEmpty // Add a check for empty list
-              ? Center(child: Text('No flashcards available.'))
-              : Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: ListView.builder(
-                    itemCount: displayedFlashcards.length,
-                    itemBuilder: (context, index) {
-                      print(
-                          'Rendering flashcard: ${displayedFlashcards[index]}'); // Debug message
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: FlashcardQuizWidget(
-                            flashcard: displayedFlashcards[index]),
-                      );
-                    },
-                  ),
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                      'Total Answers: $totalAnswers, Correct: $correctAnswers, Incorrect: $incorrectAnswers'),
                 ),
+                Expanded(
+                  child: displayedFlashcards
+                          .isEmpty // Add a check for empty list
+                      ? Center(child: Text('No flashcards available.'))
+                      : Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: ListView.builder(
+                            itemCount: displayedFlashcards.length,
+                            itemBuilder: (context, index) {
+                              print(
+                                  'Rendering flashcard: ${displayedFlashcards[index]}'); // Debug message
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: FlashcardQuizWidget(
+                                  flashcard: displayedFlashcards[index],
+                                  userId: widget.userId, // ユーザーIDを渡す
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                ),
+              ],
+            ),
     );
   }
 }
