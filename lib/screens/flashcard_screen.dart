@@ -8,7 +8,8 @@ class FlashcardScreen extends StatefulWidget {
   final String subgenre;
   final int level;
 
-  FlashcardScreen({required this.genre, required this.subgenre, required this.level});
+  FlashcardScreen(
+      {required this.genre, required this.subgenre, required this.level});
 
   @override
   FlashcardScreenState createState() => FlashcardScreenState();
@@ -35,9 +36,24 @@ class FlashcardScreenState extends State<FlashcardScreen> {
         .eq('level', widget.level);
 
     final data = response as List<dynamic>;
+    print('Fetched data: $data'); // Debug message
+
+    List<Flashcard> loadedFlashcards = [];
+    for (var flashcard in data) {
+      if (flashcard['options'] == null) {
+        flashcard['options'] = [
+          flashcard['answer'],
+          'Incorrect option 1',
+          'Incorrect option 2',
+          'Incorrect option 3',
+        ];
+      }
+      loadedFlashcards.add(Flashcard.fromMap(flashcard));
+    }
+    print('Loaded flashcards: $loadedFlashcards');
 
     setState(() {
-      flashcards = data.map((flashcard) => Flashcard.fromMap(flashcard)).toList();
+      flashcards = loadedFlashcards;
       isLoading = false;
     });
   }
@@ -47,6 +63,8 @@ class FlashcardScreenState extends State<FlashcardScreen> {
     final displayedFlashcards = showFavoritesOnly
         ? flashcards.where((flashcard) => flashcard.isFavorite).toList()
         : flashcards;
+
+    print('Displayed flashcards: $displayedFlashcards'); // Debug message
 
     return Scaffold(
       appBar: AppBar(
@@ -65,18 +83,23 @@ class FlashcardScreenState extends State<FlashcardScreen> {
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ListView.builder(
-                itemCount: displayedFlashcards.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: FlashcardQuizWidget(flashcard: displayedFlashcards[index]),
-                  );
-                },
-              ),
-            ),
+          : displayedFlashcards.isEmpty // Add a check for empty list
+              ? Center(child: Text('No flashcards available.'))
+              : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ListView.builder(
+                    itemCount: displayedFlashcards.length,
+                    itemBuilder: (context, index) {
+                      print(
+                          'Rendering flashcard: ${displayedFlashcards[index]}'); // Debug message
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: FlashcardQuizWidget(
+                            flashcard: displayedFlashcards[index]),
+                      );
+                    },
+                  ),
+                ),
     );
   }
 }

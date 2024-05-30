@@ -22,4 +22,9 @@ class Flashcard {
       level: map['level'] ?? 1,
     );
   }
+
+  @override
+  String toString() {
+    return 'Flashcard(question: $question, answer: $answer, options: $options, isFavorite: $isFavorite, level: $level)';
+  }
 }
