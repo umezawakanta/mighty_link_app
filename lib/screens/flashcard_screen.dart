@@ -8,8 +8,7 @@ class FlashcardScreen extends StatefulWidget {
   final String subgenre;
   final int level;
 
-  FlashcardScreen(
-      {required this.genre, required this.subgenre, required this.level});
+  FlashcardScreen({required this.genre, required this.subgenre, required this.level});
 
   @override
   FlashcardScreenState createState() => FlashcardScreenState();
@@ -30,7 +29,7 @@ class FlashcardScreenState extends State<FlashcardScreen> {
   Future<void> fetchFlashcards() async {
     final response = await supabase
         .from('flashcards')
-        .select('question, answer, is_favorite, level') // level を含める
+        .select('question, answer, options, is_favorite, level')
         .eq('genre', widget.genre)
         .eq('subgenre', widget.subgenre)
         .eq('level', widget.level);
@@ -38,8 +37,7 @@ class FlashcardScreenState extends State<FlashcardScreen> {
     final data = response as List<dynamic>;
 
     setState(() {
-      flashcards =
-          data.map((flashcard) => Flashcard.fromMap(flashcard)).toList();
+      flashcards = data.map((flashcard) => Flashcard.fromMap(flashcard)).toList();
       isLoading = false;
     });
   }
@@ -74,8 +72,7 @@ class FlashcardScreenState extends State<FlashcardScreen> {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child:
-                        FlashcardWidget(flashcard: displayedFlashcards[index]),
+                    child: FlashcardQuizWidget(flashcard: displayedFlashcards[index]),
                   );
                 },
               ),

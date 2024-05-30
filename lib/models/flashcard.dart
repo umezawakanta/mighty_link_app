@@ -1,28 +1,25 @@
 class Flashcard {
   final String question;
   final String answer;
-  bool isFavorite;
-  final int level; // 新しく追加
+  final List<String> options;
+  final bool isFavorite;
+  final int level;
 
-  Flashcard({required this.question, required this.answer, this.isFavorite = false, required this.level});
+  Flashcard({
+    required this.question,
+    required this.answer,
+    required this.options,
+    required this.isFavorite,
+    required this.level,
+  });
 
-  // データベースから取得する際に必要なfactoryメソッド
-  factory Flashcard.fromMap(Map<String, dynamic> data) {
+  factory Flashcard.fromMap(Map<String, dynamic> map) {
     return Flashcard(
-      question: data['question'],
-      answer: data['answer'],
-      isFavorite: data['is_favorite'] ?? false,
-      level: data['level'], // 新しく追加
+      question: map['question'] ?? '',
+      answer: map['answer'] ?? '',
+      options: map['options'] != null ? List<String>.from(map['options']) : [],
+      isFavorite: map['is_favorite'] ?? false,
+      level: map['level'] ?? 1,
     );
-  }
-
-  // データベースに保存する際に必要なメソッド
-  Map<String, dynamic> toMap() {
-    return {
-      'question': question,
-      'answer': answer,
-      'is_favorite': isFavorite,
-      'level': level, // 新しく追加
-    };
   }
 }
